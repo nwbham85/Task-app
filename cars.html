@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Search</title>
+    
+    <link rel="stylesheet" href="style.css" />
+    <script src="account_popup.html"></script>
+    <script src="search_api.js"></script>
+
+    
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="#" class="logo">🚗 CarFinder</a>
+            <div class="nav-links">
+                <a href="#" class="nav-link login">Log in</a>
+                <a href="#" class="nav-link signup">Sign up</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>🚗 Car Search</h1>
+        
+        <form id="carSearchForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="make">Make</label>
+                    <input type="text" id="make" name="make" placeholder="e.g., Toyota, Honda, Ford">
+                </div>
+                
+                <div class="form-group">
+                    <label for="model">Model</label>
+                    <input type="text" id="model" name="model" placeholder="e.g., Camry, Civic, F-150">
+                </div>
+                
+                <div class="form-group">
+                    <label for="year">Year</label>
+                    <input type="number" id="year" name="year" min="2000" max="2024" placeholder="e.g., 2020">
+                </div>
+                
+                <div class="form-group">
+                    <label for="miles">Max Miles</label>
+                    <input type="number" id="miles" name="miles" min="0" placeholder="e.g., 50000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="price">Max Price ($)</label>
+                    <input type="number" id="price" name="price" min="0" placeholder="e.g., 25000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="distance">Max Distance (miles)</label>
+                    <input type="number" id="distance" name="distance" min="0" placeholder="e.g., 100">
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button type="submit" class="search-btn">Search Cars</button>
+                <button type="button" class="clear-btn" onclick="clearForm()">Clear Form</button>
+            </div>
+        </form>
+        
+        <div id="results" class="results" style="display: none;"></div>
+    </div>
+
+    
+
+
+</body>
+</html>
