@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <div class="navBar">
+        <button id="login" type="button">Login</button>
+        <a href="signup.html">Create Account</a>
+
+        <p id="message"></p>
+    </div>
+
+    <form class="taskForm">
+        <label id="taskNameLabel">Task Name:</label>
+        <input type="text" id="taskNameInput" name="taskName">
+        <label id="taskDescriptionLabel" name="description">Task Description:</label>
+        <input type="text" id="taskDescriptionInput">
+
+        <button class="addTask" type="submit">Add Task</button>
+        <button class="deleteTaskBtn" type="button">Delete Task</button>
+    </form>
+    
+    <div class="taskContainer">
+        
+    </div>
+
+
+
+    <script src="main.js"></script>
+</body>
+</html>
