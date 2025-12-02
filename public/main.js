@@ -1,43 +1,7 @@
 const form = document.querySelector('.taskForm');
 const taskContainer = document.querySelector('.taskContainer');
 
-
-
-// Handle task submission
-form.addEventListener('submit', async (event) => {
-  event.preventDefault();
-  
-  console.log('🚀 Form submitted!');
-
-  const title = document.getElementById('taskNameInput').value;
-  const description = document.getElementById('taskDescriptionInput').value;
-
-  console.log('📝 Form values:', { title, description });
-
-  const userId = 'user123'; // TODO: Replace with actual logged-in user ID
-
-  try {
-    console.log('📡 Sending request to server...');
-    
-    const response = await fetch(`/api/users/${userId}/tasks`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, description }),
-    });
-
-    console.log('Response status:', response.status);
-    console.log('Response ok:', response.ok);
-    
-    if (!response.ok) {
-      const text = await response.text();
-      console.log('❌ Error response:', text);
-      throw new Error(`Server error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log('✅ Task saved:', data);
-
-    // Function to fetch and display tasks
+// ✅ Define loadTasks FIRST, outside the event listener
 async function loadTasks(userId) {
   try {
     const response = await fetch(`/api/users/${userId}/tasks`);
@@ -63,7 +27,7 @@ async function loadTasks(userId) {
           <h3>${task.title}</h3>
           <p>${task.description || 'No description'}</p>
           <small>Created: ${new Date(task.createdAt).toLocaleDateString()}</small>
-          <button type='button' class='deleteBtn'>Delete Task</button>
+          <button type='button' class='deleteBtn' data-id='${task._id}'>Delete Task</button>
         `;
         taskContainer.appendChild(taskDiv);
       });
@@ -74,6 +38,40 @@ async function loadTasks(userId) {
     taskContainer.innerHTML = '<p>Failed to load tasks</p>';
   }
 }
+
+// Handle task submission
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  
+  console.log('🚀 Form submitted!');
+
+  const title = document.getElementById('taskNameInput').value;
+  const description = document.getElementById('taskDescriptionInput').value;
+
+  console.log('📝 Form values:', { title, description });
+
+  const userId = 'user123';
+
+  try {
+    console.log('📡 Sending request to server...');
+    
+    const response = await fetch(`/api/users/${userId}/tasks`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, description }),
+    });
+
+    console.log('Response status:', response.status);
+    console.log('Response ok:', response.ok);
+    
+    if (!response.ok) {
+      const text = await response.text();
+      console.log('❌ Error response:', text);
+      throw new Error(`Server error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('✅ Task saved:', data);
     
     // Clear the form after successful submission
     form.reset();
@@ -97,10 +95,5 @@ async function loadTasks(userId) {
   }
 });
 
-// Load tasks when page first loads
+// ✅ Load tasks when page first loads
 loadTasks('user123');
-
-
-
-// task delete button
-
