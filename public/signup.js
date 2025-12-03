@@ -6,56 +6,82 @@ const password = document.getElementById('passwordInput');
 const passwordConfirm = document.getElementById('confirmPassword');
 const button = document.getElementById('submit');
 
-button.addEventListener('submit', createUser);
+button.addEventListener('click', createUser);
 
 
 
 // Function to run all validation checks, including database checks
-async function validateForm(username, email) {
+async function validateForm(username, userEmail, userPassword, userPasswordConfirm) {
     const errors = {}; 
     
-    // --- Stage 1: Local Client-Side Validation (Required Fields, Length, Format) ---
-    // (Assume you have basic checks here as previously discussed)
+    // Username validation
     if (username.trim() === '') {
         errors.username = 'Username is required.';
+    } else if (username.length < 3) {
+        errors.username = 'Username must be at least 3 characters.';
+    } else if (username.length > 20) {
+        errors.username = 'Username must be less than 20 characters.';
     }
-    if (email.trim() === '') {
-        errors.email = 'Email is required.';
-    }
-    // ... other password and format checks ...
     
-    // If local checks failed, stop here and return errors
+    // Email validation
+    if (userEmail.trim() === '') {
+        errors.email = 'Email is required.';
+    } else {
+        // Email format validation
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(userEmail)) {
+            errors.email = 'Please enter a valid email address.';
+        }
+    }
+    
+    // Password validation
+    if (userPassword.trim() === '') {
+        errors.password = 'Password is required.';
+    } else if (userPassword.length < 8) {
+        errors.password = 'Password must be at least 8 characters.';
+    } else if (!/[A-Z]/.test(userPassword)) {
+        errors.password = 'Password must contain at least one uppercase letter.';
+    } else if (!/[a-z]/.test(userPassword)) {
+        errors.password = 'Password must contain at least one lowercase letter.';
+    } else if (!/[0-9]/.test(userPassword)) {
+        errors.password = 'Password must contain at least one number.';
+    } else if (!/[!@#$%^&*]/.test(userPassword)) {
+        errors.password = 'Password must contain at least one special character (!@#$%^&*).';
+    }
+    
+    // Password confirmation validation
+    if (userPasswordConfirm.trim() === '') {
+        errors.passwordConfirm = 'Please confirm your password.';
+    } else if (userPassword !== userPasswordConfirm) {
+        errors.passwordConfirm = 'Passwords do not match.';
+    }
+    
+    // If local checks failed, stop here
     if (Object.keys(errors).length > 0) {
         return errors; 
     }
 
-    // --- Stage 2: Database Existence Check (Requires new API endpoint) ---
-    
-    // NOTE: You must create a GET endpoint on your server like /api/users/check-existence
-    const checkUrl = `http://localhost:3000/api/users/check-existence?username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}`;
+    // Database existence check
+    const checkUrl = `http://localhost:3000/api/users/check-existence?username=${encodeURIComponent(username)}&email=${encodeURIComponent(userEmail)}`;
     
     try {
         const response = await fetch(checkUrl);
 
         if (!response.ok) {
-            // Handle server errors during the check
             throw new Error('Database check failed.');
         }
 
         const data = await response.json(); 
-        // Expected response data format: { usernameExists: true/false, emailExists: true/false }
 
         if (data.usernameExists) {
             errors.username = 'This username is already taken.';
         }
         if (data.emailExists) {
-            // This is usually checked on the server during POST, but checking here improves UX.
             errors.email = 'This email is already registered.';
         }
 
     } catch (error) {
         console.error('Network error during user existence check:', error);
-        // Add a general network error message if the check fails
         errors.general = 'Could not verify user existence due to a network error.';
     }
 
@@ -65,39 +91,136 @@ async function validateForm(username, email) {
 
 
 async function createUser(event){
-    // Prevent default form submission if applicable
-    // event.preventDefault(); 
+    event.preventDefault(); 
 
     const url = 'http://localhost:3000/api/users/signup';
-
 
     const user = userName.value;
     const userEmail = email.value;
     const userPassword = password.value;
     const userPasswordConfirm = passwordConfirm.value;
 
-    // 1. RUN VALIDATION
-    const validationErrors = await validateForm(user, userEmail); // Pass relevant inputs
+    // Run validation
+    const validationErrors = await validateForm(user, userEmail, userPassword, userPasswordConfirm);
 
-    // 2. CHECK FOR ERRORS
+    // Check for errors
     if (Object.keys(validationErrors).length > 0) {
-        // Assume you have a function to show errors on the screen
         displayErrors(validationErrors); 
-        return; // STOP EXECUTION if validation fails
+        return;
     }
 
-    // 3. PROCEED WITH FETCH (If validation and existence checks pass)
-
+    // Proceed with fetch if validation passes
     try {
         const response = await fetch(url, {
-            method: 'POST', // Use POST method for signup
-            // ... include body with user data (username, email, password) ...
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: user,
+                email: userEmail,
+                password: userPassword
+            })
         });
+
+        if (!response.ok) {
+            throw new Error('Signup failed. Please try again.');
+        }
+
+        const data = await response.json();
         
-        // ... rest of your successful POST logic ...
+        // Success - redirect or show success message
+        console.log('User created successfully:', data);
+        alert('Signup successful! Welcome!');
+        
+        // Optionally redirect to login or dashboard
+        // window.location.href = '/login.html';
+        
+        // Or clear the form
+        userName.value = '';
+        email.value = '';
+        password.value = '';
+        passwordConfirm.value = '';
+        clearErrors();
 
     } catch (error) {
-        console.error(error);
+        console.error('Signup error:', error);
+        displayErrors({ general: 'Signup failed. Please try again later.' });
     }
+}
+
+function displayErrors(errors) {
+    // Clear any previous error messages
+    clearErrors();
+    
+    // Display username error
+    if (errors.username) {
+        const usernameError = document.createElement('span');
+        usernameError.className = 'error-message';
+        usernameError.textContent = errors.username;
+        usernameError.style.color = 'red';
+        usernameError.style.fontSize = '12px';
+        userName.insertAdjacentElement('afterend', usernameError);
+        userName.style.borderColor = 'red';
+    }
+    
+    // Display email error
+    if (errors.email) {
+        const emailError = document.createElement('span');
+        emailError.className = 'error-message';
+        emailError.textContent = errors.email;
+        emailError.style.color = 'red';
+        emailError.style.fontSize = '12px';
+        email.insertAdjacentElement('afterend', emailError);
+        email.style.borderColor = 'red';
+    }
+    
+    // Display password error
+    if (errors.password) {
+        const passwordError = document.createElement('span');
+        passwordError.className = 'error-message';
+        passwordError.textContent = errors.password;
+        passwordError.style.color = 'red';
+        passwordError.style.fontSize = '12px';
+        password.insertAdjacentElement('afterend', passwordError);
+        password.style.borderColor = 'red';
+    }
+    
+    // Display password confirmation error
+    if (errors.passwordConfirm) {
+        const confirmError = document.createElement('span');
+        confirmError.className = 'error-message';
+        confirmError.textContent = errors.passwordConfirm;
+        confirmError.style.color = 'red';
+        confirmError.style.fontSize = '12px';
+        passwordConfirm.insertAdjacentElement('afterend', confirmError);
+        passwordConfirm.style.borderColor = 'red';
+    }
+    
+    // Display general errors (network issues, etc.)
+    if (errors.general) {
+        const generalError = document.createElement('div');
+        generalError.className = 'error-message general-error';
+        generalError.textContent = errors.general;
+        generalError.style.color = 'red';
+        generalError.style.padding = '10px';
+        generalError.style.marginBottom = '10px';
+        generalError.style.backgroundColor = '#ffe6e6';
+        generalError.style.border = '1px solid red';
+        generalError.style.borderRadius = '4px';
+        button.insertAdjacentElement('beforebegin', generalError);
+    }
+}
+
+function clearErrors() {
+    // Remove all error messages
+    const errorMessages = document.querySelectorAll('.error-message');
+    errorMessages.forEach(error => error.remove());
+    
+    // Reset border colors
+    userName.style.borderColor = '';
+    email.style.borderColor = '';
+    password.style.borderColor = '';
+    passwordConfirm.style.borderColor = '';
 }
 
