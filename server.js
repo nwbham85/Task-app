@@ -130,6 +130,19 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
 });
 
+app.get('/api/users/check-existence', async (req, res) => {
+    const { username, email } = req.query;
+    
+    // Check your database
+    const usernameExists = await User.findOne({ username: username });
+    const emailExists = await User.findOne({ email: email });
+    
+    res.json({
+        usernameExists: !!usernameExists,
+        emailExists: !!emailExists
+    });
+});
+
 // --- SIGNUP PAGE ROUTE ---
 app.get('/signup', (req, res) => {
   res.sendFile(__dirname + '/public/signup.html');
