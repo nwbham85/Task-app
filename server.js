@@ -130,6 +130,9 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
 });
 
+
+// check user existence
+
 app.get('/api/users/check-existence', async (req, res) => {
     const { username, email } = req.query;
     
