@@ -8,21 +8,7 @@ const button = document.getElementById('submit');
 
 button.addEventListener('submit', createUser);
 
-// validate form
-function validateForm(user, userEmail, userPassword, userPasswordConfirm) {
-    const errors = {}; 
-    
-    // --- INSERT ALL YOUR VALIDATION STAGES HERE ---
-    if (user.trim() === '') {
-        errors.user = 'Username is required.';
-    }
-    if (userPassword.length < 8) {
-        errors.password = 'Password must be at least 8 characters.';
-    }
-    // ... add all other checks (email format, password match, etc.) ...
-    
-    return errors;
-}
+
 
 // Function to run all validation checks, including database checks
 async function validateForm(username, email) {
