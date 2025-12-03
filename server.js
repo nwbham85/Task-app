@@ -130,32 +130,6 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
 });
 
-// --- NEW ROUTE: CHECK USER EXISTENCE ---
-app.get('/api/users/check-existence', async (req, res) => {
-    try {
-        const { username, email } = req.query;
-        const query = {};
-
-        if (username) {
-            query.username = username;
-        }
-        if (email) {
-            query.email = email;
-        }
-
-        const existingUser = await User.findOne({ $or: [{ username: query.username }, { email: query.email }] });
-
-        res.status(200).json({
-            usernameExists: !!(existingUser && existingUser.username === username),
-            emailExists: !!(existingUser && existingUser.email === email),
-        });
-
-    } catch (err) {
-        console.error('Check existence error:', err);
-        res.status(500).json({ error: 'Failed to check user existence' });
-    }
-});
-
 // --- SIGNUP PAGE ROUTE ---
 app.get('/signup', (req, res) => {
   res.sendFile(__dirname + '/public/signup.html');
