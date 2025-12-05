@@ -8,6 +8,17 @@ require('dotenv').config();
 const app = express();
 app.use(express.json());
 
+const path = require('path'); // Add at top with other requires
+app.use(express.static(__dirname)); // Add after app.use(express.json());
+
+// ADD THESE LINES:
+app.use(express.static(__dirname));
+
+// Serve login page as default
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'login.html'));
+});
+
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/taskapp');
 
