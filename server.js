@@ -318,6 +318,48 @@ app.get('/api/auth/me', authenticate, async (req, res) => {
   });
 });
 
+// update user profile
+
+
+app.patch('/api/auth/update-profile', authenticate, async (req, res) => {
+  try {
+    const { email, username, profile } = req.body;
+
+    // Check if email/username is taken by another user
+    if (email !== req.user.email) {
+      const existingEmail = await User.findOne({ email, _id: { $ne: req.user._id } });
+      if (existingEmail) {
+        return res.status(400).json({ error: 'Email already in use' });
+      }
+    }
+
+    if (username !== req.user.username) {
+      const existingUsername = await User.findOne({ username, _id: { $ne: req.user._id } });
+      if (existingUsername) {
+        return res.status(400).json({ error: 'Username already taken' });
+      }
+    }
+
+    // Update user
+    req.user.email = email;
+    req.user.username = username;
+    if (profile) {
+      req.user.profile = { ...req.user.profile, ...profile };
+    }
+
+    await req.user.save();
+
+    res.json({
+      id: req.user._id,
+      email: req.user.email,
+      username: req.user.username,
+      profile: req.user.profile
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // ============================================
 // TASK ROUTES
 // ============================================
