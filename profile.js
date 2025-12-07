@@ -6,6 +6,8 @@ if(!token) {
     window.location.href = 'login.html';
 }
 
+// ====== STEP 2  =======
+
 // create api function
 async function apiCall(endpoint, options = {}) {
     // make fetch request
@@ -29,3 +31,19 @@ async function apiCall(endpoint, options = {}) {
     // convert response to JSON and return it
     return await response.json();
 }
+// =====    step 3 load user profile data ====
+
+// call api to get user data from mongo
+async function loadProfile() {
+    const user = await apiCall('/api/auth/me');
+
+    //update and display user data
+    document.getElementById('displayEmail').textContent = user.email;
+    document.getElementById('displayUsername').textContent = user.username;
+    document.getElementById('displayFirstName').textContent = user.profile?.firstName || '-';
+    document.getElementById('displayLastName').textContent = user.profile?.lastName || '-';
+}
+loadProfile();
+// store data in variable
+
+//display on the page
