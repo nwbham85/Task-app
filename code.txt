@@ -1,5 +1,193 @@
-first paragraph
+// ============================================
+// TEAM ROUTES
+// ============================================
 
-second paragraph
+// Get all teams (user is member of)
+app.get('/api/teams', authenticate, async (req, res) => {
+  try {
+    const teams = await Team.find({
+      $or: [
+        { createdBy: req.user._id },
+        { 'members.userId': req.user._id }
+      ]
+    })
+      .populate('createdBy', 'username email profile')
+      .populate('members.userId', 'username email profile')
+      .sort({ createdAt: -1 });
 
-third paragraph
+    res.json(teams);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get single team
+app.get('/api/teams/:id', authenticate, async (req, res) => {
+  try {
+    const team = await Team.findById(req.params.id)
+      .populate('createdBy', 'username email profile')
+      .populate('members.userId', 'username email profile');
+
+    if (!team) {
+      return res.status(404).json({ error: 'Team not found' });
+    }
+
+    // Check if user has access
+    const hasAccess = team.createdBy._id.toString() === req.user._id.toString() ||
+                      team.members.some(m => m.userId._id.toString() === req.user._id.toString());
+
+    if (!hasAccess) {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    res.json(team);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Create team
+app.post('/api/teams', authenticate, validateTeam, async (req, res) => {
+  try {
+    const team = new Team({
+      ...req.body,
+      createdBy: req.user._id,
+      members: [{
+        userId: req.user._id,
+        role: 'owner',
+        joinedAt: new Date()
+      }]
+    });
+
+    await team.save();
+
+    const populatedTeam = await Team.findById(team._id)
+      .populate('createdBy', 'username email profile')
+      .populate('members.userId', 'username email profile');
+
+    res.status(201).json(populatedTeam);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Update team
+app.patch('/api/teams/:id', authenticate, async (req, res) => {
+  try {
+    const team = await Team.findById(req.params.id);
+
+    if (!team) {
+      return res.status(404).json({ error: 'Team not found' });
+    }
+
+    // Only owner or admin can update
+    const member = team.members.find(m => m.userId.toString() === req.user._id.toString());
+    if (team.createdBy.toString() !== req.user._id.toString() && 
+        (!member || member.role !== 'admin')) {
+      return res.status(403).json({ error: 'Not authorized to update this team' });
+    }
+
+    Object.assign(team, req.body);
+    await team.save();
+
+    const updatedTeam = await Team.findById(team._id)
+      .populate('createdBy', 'username email profile')
+      .populate('members.userId', 'username email profile');
+
+    res.json(updatedTeam);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Delete team
+app.delete('/api/teams/:id', authenticate, async (req, res) => {
+  try {
+    const team = await Team.findById(req.params.id);
+
+    if (!team) {
+      return res.status(404).json({ error: 'Team not found' });
+    }
+
+    // Only owner can delete
+    if (team.createdBy.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ error: 'Only owner can delete team' });
+    }
+
+    await team.deleteOne();
+    res.json({ message: 'Team deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Add member to team
+app.post('/api/teams/:id/members', authenticate, async (req, res) => {
+  try {
+    const { userId, role } = req.body;
+
+    const team = await Team.findById(req.params.id);
+
+    if (!team) {
+      return res.status(404).json({ error: 'Team not found' });
+    }
+
+    // Only owner or admin can add members
+    const requester = team.members.find(m => m.userId.toString() === req.user._id.toString());
+    if (team.createdBy.toString() !== req.user._id.toString() && 
+        (!requester || requester.role !== 'admin')) {
+      return res.status(403).json({ error: 'Not authorized to add members' });
+    }
+
+    // Check if user already a member
+    const existing = team.members.find(m => m.userId.toString() === userId);
+    if (existing) {
+      return res.status(400).json({ error: 'User already a member' });
+    }
+
+    // Check max members limit
+    if (team.members.length >= team.settings.maxMembers) {
+      return res.status(400).json({ error: 'Team has reached maximum members' });
+    }
+
+    team.members.push({
+      userId,
+      role: role || 'member',
+      joinedAt: new Date()
+    });
+
+    await team.save();
+
+    const updatedTeam = await Team.findById(team._id)
+      .populate('members.userId', 'username email profile');
+
+    res.json(updatedTeam);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Remove member from team
+app.delete('/api/teams/:id/members/:userId', authenticate, async (req, res) => {
+  try {
+    const team = await Team.findById(req.params.id);
+
+    if (!team) {
+      return res.status(404).json({ error: 'Team not found' });
+    }
+
+    // Only owner or admin can remove members
+    const requester = team.members.find(m => m.userId.toString() === req.user._id.toString());
+    if (team.createdBy.toString() !== req.user._id.toString() && 
+        (!requester || requester.role !== 'admin')) {
+      return res.status(403).json({ error: 'Not authorized to remove members' });
+    }
+
+    team.members = team.members.filter(m => m.userId.toString() !== req.params.userId);
+    await team.save();
+
+    res.json({ message: 'Member removed successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
