@@ -164,6 +164,9 @@ input::placeholder {
   background: #f7fafc;
   min-height: 100vh;
   padding: 0;
+  display: block;          
+  align-items: unset;      
+  justify-content: unset;  
 }
 
 /* Header */
