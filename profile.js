@@ -69,6 +69,8 @@ document.getElementById('cancelBtn').addEventListener('click', () => {
 
 document.getElementById('profileForm').addEventListener('submit', async (event) => {
     event.preventDefault();
+    console.log('Form submitted!');  
+    
 
     //collect data from form inputs
     const updatedData = {
@@ -79,11 +81,14 @@ document.getElementById('profileForm').addEventListener('submit', async (event) 
             lastName: document.getElementById('lastName').value
         }
     };
+
+    try {
     // send patch request to update profile
     const result = await apiCall('/api/auth/update-profile', {
-        method: PATCH,
+        method: 'PATCH',
         body: JSON.stringify(updatedData)
     });
+    console.log('Result from API:', result);
     // update local storage with new data
     const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
     storedUser.username = result.username;
@@ -107,6 +112,10 @@ document.getElementById('profileForm').addEventListener('submit', async (event) 
     setTimeout(() => {
         successMsg.style.display = 'none';
     }, 2000);
+
+    } catch(error) {
+    console.error('error updating profile', error);
+    }
 });
 
 loadProfile();
