@@ -2,9 +2,9 @@
   "name": "gitproject",
   "version": "1.0.0",
   "description": "",
-  "main": "fetch.js",
+  "main": "server.js",
   "scripts": {
-    "devStart": "nodemon fetch.js"
+    "devStart": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
