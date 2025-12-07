@@ -56,5 +56,57 @@ document.getElementById('cancelBtn').addEventListener('click', () => {
     document.getElementById('viewMode').style.display = 'block';
 });
 
-// Load profile when page loads
+// ==== STEP 5: SAVE CHANGES WHEN FORM IS SUBMITTED ====
+
+// When the user clicks "Save Changes":
+
+// Prevent the form from refreshing the page (forms do this by default)
+// Collect the data from the form inputs
+// Send it to the backend API with a PATCH request
+// Update the display with the new data
+// Switch back to view mode
+// Show a success message
+
+document.getElementById('profileForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    //collect data from form inputs
+    const updatedData = {
+        email: document.getElementById('email').value,
+        username: document.getElementById('username').value,
+        profile: {
+            firstName: document.getElementById('firstName').value,
+            lastName: document.getElementById('lastName').value
+        }
+    };
+    // send patch request to update profile
+    const result = await apiCall('/api/auth/update-profile', {
+        method: PATCH,
+        body: JSON.stringify(updatedData)
+    });
+    // update local storage with new data
+    const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+    storedUser.username = result.username;
+    storedUser.email = result.email;
+    storedUser. profile = result.profile;
+    localStorage.setItem('user', JSON.stringify(storedUser));
+
+    //reload profile to show new data
+    await loadProfile();
+
+    //switch back to view mode
+    // Switch back to view mode
+    document.getElementById('editMode').style.display = 'none';
+    document.getElementById('viewMode').style.display = 'block';
+
+    // show success message
+    const successMsg = document.getElementById('successMessage');
+    successMsg.textContent = 'Profile updated successfully.';
+    successMsg.style.display = 'block';
+    // hide success message after 2 seconds
+    setTimeout(() => {
+        successMsg.style.display = 'none';
+    }, 2000);
+});
+
 loadProfile();
