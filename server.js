@@ -238,6 +238,17 @@ const validateProject = (req, res, next) => {
   next();
 };
 
+//validate team middleware
+const validateTeam = (req, res, next) => {
+  const { name } = req.body;
+  
+  if (!name || name.trim().length === 0) {
+    return res.status(400).json({ error: 'Team name is required' });
+  }
+  
+  next();
+};
+
 // ============================================
 // AUTH ROUTES
 // ============================================
