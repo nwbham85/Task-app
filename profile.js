@@ -1,16 +1,13 @@
-// authorization check - is user logged in?
+// Step 1: Auth check
 const token = localStorage.getItem('token');
+let currentUser = null;
 
 if(!token) {
-    console.log('no token found.');
     window.location.href = 'login.html';
 }
 
-// ====== STEP 2  =======
-
-// create api function
+// Step 2: API function
 async function apiCall(endpoint, options = {}) {
-    // make fetch request
     const response = await fetch(`http://localhost:3000${endpoint}`, {
         ...options,
         headers: {
@@ -20,7 +17,6 @@ async function apiCall(endpoint, options = {}) {
         }
     });
 
-    // check if user is unauthorized (token expired/invalid)
     if (response.status === 401) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
@@ -28,22 +24,37 @@ async function apiCall(endpoint, options = {}) {
         return;
     }
 
-    // convert response to JSON and return it
     return await response.json();
 }
-// =====    step 3 load user profile data ====
 
-// call api to get user data from mongo
+// Step 3: Load profile
 async function loadProfile() {
     const user = await apiCall('/api/auth/me');
-
-    //update and display user data
-    document.getElementById('displayEmail').textContent = user.email;
-    document.getElementById('displayUsername').textContent = user.username;
+    currentUser = user;
+    
+    // Display user data
+    document.getElementById('displayEmail').textContent = user.email || '-';
+    document.getElementById('displayUsername').textContent = user.username || '-';
     document.getElementById('displayFirstName').textContent = user.profile?.firstName || '-';
     document.getElementById('displayLastName').textContent = user.profile?.lastName || '-';
 }
-loadProfile();
-// store data in variable
 
-//display on the page
+// Step 4: Edit button - OUTSIDE loadProfile function
+document.getElementById('editProfileBtn').addEventListener('click', () => {
+    document.getElementById('viewMode').style.display = 'none';
+    document.getElementById('editMode').style.display = 'block';
+    
+    document.getElementById('email').value = currentUser.email || '';
+    document.getElementById('username').value = currentUser.username || '';
+    document.getElementById('firstName').value = currentUser.profile?.firstName || '';
+    document.getElementById('lastName').value = currentUser.profile?.lastName || '';
+});
+
+// Cancel button - OUTSIDE loadProfile function
+document.getElementById('cancelBtn').addEventListener('click', () => {
+    document.getElementById('editMode').style.display = 'none';
+    document.getElementById('viewMode').style.display = 'block';
+});
+
+// Load profile when page loads
+loadProfile();
