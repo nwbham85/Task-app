@@ -1,3 +1,5 @@
+import mongoose from 'mongoose';
+
 const teamSchema = new mongoose.Schema({
   name: { 
     type: String, 
@@ -66,3 +68,4 @@ teamSchema.index({ 'members.userId': 1 });
 teamSchema.index({ name: 1 });
 
 const Team = mongoose.model('Team', teamSchema);
+export default Team;
