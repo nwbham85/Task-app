@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const User = require('./models/User'); // Your Mongoose User model
 require('dotenv').config();
 
 const app = express();
@@ -31,6 +32,8 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   username: { type: String, required: true, unique: true },
   passwordHash: { type: String, required: true },
+  resetPasswordToken: String,
+  resetPasswordExpires: Date,
   profile: {
     firstName: String,
     lastName: String,
@@ -303,7 +306,67 @@ app.post('/api/auth/register', async (req, res) => {
   }
 });
 
-// update user profile
+// forgot password
+
+app.post('/api/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      // Security: Don't reveal if user exists. 
+      // Just return a success message.
+      return res.status(200).json({ message: 'If an account exists, a reset link has been sent.' });
+    }
+
+    // 1. Create a secure random token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+
+    // 2. Set token and expiry (e.g., 1 hour from now)
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpires = Date.now() + 3600000; 
+
+    await user.save();
+
+    // 3. Send the email (logic below)
+    await sendResetEmail(user.email, resetToken);
+
+    res.status(200).json({ message: 'Reset link sent to email.' });
+
+  } catch (error) {
+    res.status(500).json({ message: 'Server error, please try again later.' });
+  }
+});
+
+// send email for forgot password
+
+const nodemailer = require('nodemailer');
+
+const sendResetEmail = async (email, token) => {
+  const transporter = nodemailer.createTransport({
+    service: 'Gmail', // Or your preferred provider
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+
+  const resetUrl = `https://your-app.com/reset-password/${token}`;
+
+  const mailOptions = {
+    to: email,
+    from: 'passwordreset@yourapp.com',
+    subject: 'Password Reset Request',
+    text: `You are receiving this because you requested a password reset. 
+           Please click on the following link to complete the process:
+           ${resetUrl}
+           If you did not request this, please ignore this email.`
+  };
+
+  await transporter.sendMail(mailOptions);
+};
+
+
 // Update user profile
 app.patch('/api/auth/update-profile', authenticate, async (req, res) => {
   try {
