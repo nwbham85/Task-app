@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('./models/User'); // Your Mongoose User model
+const crypto = require('crypto');
 require('dotenv').config();
 
 const app = express();
@@ -12,8 +12,7 @@ app.use(express.json());
 const path = require('path'); // Add at top with other requires
 app.use(express.static(__dirname)); // Add after app.use(express.json());
 
-// ADD THESE LINES:
-app.use(express.static(__dirname));
+
 
 // Serve login page as default
 app.get('/', (req, res) => {
