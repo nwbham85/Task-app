@@ -9,10 +9,10 @@ const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 // Import Models
-const User = require('./models/user');
-const Task = require('./models/task');
-const Project = require('./models/project');
-const Team = require('./models/team');
+const User = require('./models/User');
+const Task = require('./models/Task');
+const Project = require('./models/Project');
+const Team = require('./models/Team');
 
 const app = express();
 app.use(express.json());
