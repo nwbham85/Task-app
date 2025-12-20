@@ -3,16 +3,20 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const path = require('path');
 const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 require('dotenv').config();
+
+// Import Models
+const User = require('./models/user');
+const Task = require('./models/task');
+const Project = require('./models/project');
+const Team = require('./models/team');
 
 const app = express();
 app.use(express.json());
-
-const path = require('path'); // Add at top with other requires
-app.use(express.static(__dirname)); // Add after app.use(express.json());
-
-
+app.use(express.static(__dirname));
 
 // Serve login page as default
 app.get('/', (req, res) => {
@@ -20,177 +24,9 @@ app.get('/', (req, res) => {
 });
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/taskapp');
-
-// ============================================
-// MODELS
-// ============================================
-
-// User Model
-const userSchema = new mongoose.Schema({
-  email: { type: String, required: true, unique: true },
-  username: { type: String, required: true, unique: true },
-  passwordHash: { type: String, required: true },
-  resetPasswordToken: String,
-  resetPasswordExpires: Date,
-  profile: {
-    firstName: String,
-    lastName: String,
-    avatar: String,
-    timezone: String
-  },
-  preferences: {
-    defaultView: { type: String, default: 'list' },
-    theme: { type: String, default: 'light' },
-    notifications: { type: Boolean, default: true }
-  }
-}, { timestamps: true });
-
-const User = mongoose.model('User', userSchema);
-
-// Task Model
-const taskSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  description: String,
-  status: { 
-    type: String, 
-    enum: ['todo', 'in_progress', 'done', 'archived'],
-    default: 'todo'
-  },
-  priority: { 
-    type: String, 
-    enum: ['low', 'medium', 'high', 'urgent'],
-    default: 'medium'
-  },
-  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  projectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Project' },
-  dueDate: Date,
-  completedAt: Date,
-  tags: [String],
-  subtasks: [{
-    title: String,
-    completed: { type: Boolean, default: false },
-    createdAt: { type: Date, default: Date.now }
-  }],
-  comments: [{
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    text: String,
-    createdAt: { type: Date, default: Date.now }
-  }],
-  attachments: [{
-    fileName: String,
-    fileUrl: String,
-    fileSize: Number,
-    uploadedAt: { type: Date, default: Date.now }
-  }]
-}, { timestamps: true });
-
-// Indexes for common queries
-taskSchema.index({ assignedTo: 1, status: 1 });
-taskSchema.index({ projectId: 1, status: 1 });
-taskSchema.index({ dueDate: 1 });
-taskSchema.index({ tags: 1 });
-
-const Task = mongoose.model('Task', taskSchema);
-
-// Project Model
-const projectSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  description: String,
-  color: String,
-  ownerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  members: [{
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    role: { 
-      type: String, 
-      enum: ['owner', 'admin', 'member', 'viewer'],
-      default: 'member'
-    },
-    addedAt: { type: Date, default: Date.now }
-  }],
-  status: { 
-    type: String, 
-    enum: ['active', 'archived', 'completed'],
-    default: 'active'
-  },
-  startDate: Date,
-  endDate: Date,
-  settings: {
-    isPublic: { type: Boolean, default: false },
-    allowComments: { type: Boolean, default: true },
-    defaultTaskStatus: { type: String, default: 'todo' }
-  }
-}, { timestamps: true });
-
-projectSchema.index({ ownerId: 1 });
-projectSchema.index({ 'members.userId': 1 });
-
-const Project = mongoose.model('Project', projectSchema);
-
-// Team Model
-const teamSchema = new mongoose.Schema({
-  name: { 
-    type: String, 
-    required: true,
-    trim: true
-  },
-  description: String,
-  isPublic: { 
-    type: Boolean, 
-    default: false
-  },
-  createdBy: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User',
-    required: true 
-  },
-  members: [{
-    userId: { 
-      type: mongoose.Schema.Types.ObjectId, 
-      ref: 'User',
-      required: true
-    },
-    role: { 
-      type: String, 
-      enum: ['owner', 'admin', 'member'],
-      default: 'member'
-    },
-    joinedAt: { 
-      type: Date, 
-      default: Date.now 
-    }
-  }],
-  status: {
-    type: String,
-    enum: ['active', 'archived'],
-    default: 'active'
-  },
-  settings: {
-    maxMembers: { 
-      type: Number, 
-      default: 10,
-      min: 2,
-      max: 100
-    },
-    allowJoinRequests: { 
-      type: Boolean, 
-      default: false 
-    }
-  },
-  avatar: String,
-  color: { 
-    type: String, 
-    default: '#667eea' 
-  }
-}, { timestamps: true });
-
-// Indexes for faster queries
-teamSchema.index({ createdBy: 1 });
-teamSchema.index({ 'members.userId': 1 });
-teamSchema.index({ name: 1 });
-
-const Team = mongoose.model('Team', teamSchema);
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/taskapp')
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('MongoDB connection error:', err));
 
 // ============================================
 // MIDDLEWARE
@@ -240,7 +76,6 @@ const validateProject = (req, res, next) => {
   next();
 };
 
-//validate team middleware
 const validateTeam = (req, res, next) => {
   const { name } = req.body;
   
@@ -249,6 +84,35 @@ const validateTeam = (req, res, next) => {
   }
   
   next();
+};
+
+// ============================================
+// UTILITY FUNCTIONS
+// ============================================
+
+// Email utility for password reset
+const sendResetEmail = async (email, token) => {
+  const transporter = nodemailer.createTransporter({
+    service: 'Gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+
+  const resetUrl = `${process.env.APP_URL || 'http://localhost:3000'}/reset-password/${token}`;
+
+  const mailOptions = {
+    to: email,
+    from: process.env.EMAIL_USER || 'passwordreset@yourapp.com',
+    subject: 'Password Reset Request',
+    text: `You are receiving this because you requested a password reset. 
+           Please click on the following link to complete the process:
+           ${resetUrl}
+           If you did not request this, please ignore this email.`
+  };
+
+  await transporter.sendMail(mailOptions);
 };
 
 // ============================================
@@ -305,107 +169,6 @@ app.post('/api/auth/register', async (req, res) => {
   }
 });
 
-// forgot password
-
-app.post('/api/forgot-password', async (req, res) => {
-  try {
-    const { email } = req.body;
-    const user = await User.findOne({ email });
-
-    if (!user) {
-      // Security: Don't reveal if user exists. 
-      // Just return a success message.
-      return res.status(200).json({ message: 'If an account exists, a reset link has been sent.' });
-    }
-
-    // 1. Create a secure random token
-    const resetToken = crypto.randomBytes(32).toString('hex');
-
-    // 2. Set token and expiry (e.g., 1 hour from now)
-    user.resetPasswordToken = resetToken;
-    user.resetPasswordExpires = Date.now() + 3600000; 
-
-    await user.save();
-
-    // 3. Send the email (logic below)
-    await sendResetEmail(user.email, resetToken);
-
-    res.status(200).json({ message: 'Reset link sent to email.' });
-
-  } catch (error) {
-    res.status(500).json({ message: 'Server error, please try again later.' });
-  }
-});
-
-// send email for forgot password
-
-const nodemailer = require('nodemailer');
-
-const sendResetEmail = async (email, token) => {
-  const transporter = nodemailer.createTransport({
-    service: 'Gmail', // Or your preferred provider
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
-
-  const resetUrl = `https://your-app.com/reset-password/${token}`;
-
-  const mailOptions = {
-    to: email,
-    from: 'passwordreset@yourapp.com',
-    subject: 'Password Reset Request',
-    text: `You are receiving this because you requested a password reset. 
-           Please click on the following link to complete the process:
-           ${resetUrl}
-           If you did not request this, please ignore this email.`
-  };
-
-  await transporter.sendMail(mailOptions);
-};
-
-
-// Update user profile
-app.patch('/api/auth/update-profile', authenticate, async (req, res) => {
-  try {
-    const { email, username, profile } = req.body;
-
-    // Check if email/username is taken by another user
-    if (email !== req.user.email) {
-      const existingEmail = await User.findOne({ email, _id: { $ne: req.user._id } });
-      if (existingEmail) {
-        return res.status(400).json({ error: 'Email already in use' });
-      }
-    }
-
-    if (username !== req.user.username) {
-      const existingUsername = await User.findOne({ username, _id: { $ne: req.user._id } });
-      if (existingUsername) {
-        return res.status(400).json({ error: 'Username already taken' });
-      }
-    }
-
-    // Update user
-    req.user.email = email;
-    req.user.username = username;
-    if (profile) {
-      req.user.profile = { ...req.user.profile, ...profile };
-    }
-
-    await req.user.save();
-
-    res.json({
-      id: req.user._id,
-      email: req.user.email,
-      username: req.user.username,
-      profile: req.user.profile
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
 // Login
 app.post('/api/auth/login', async (req, res) => {
   try {
@@ -455,31 +218,85 @@ app.get('/api/auth/me', authenticate, async (req, res) => {
   });
 });
 
-// update user profile
+// Forgot password
+app.post('/api/auth/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
 
+    if (!user) {
+      return res.status(200).json({ message: 'If an account exists, a reset link has been sent.' });
+    }
 
+    // Create a secure random token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+
+    // Set token and expiry (1 hour from now)
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpires = Date.now() + 3600000; 
+
+    await user.save();
+
+    // Send the email
+    await sendResetEmail(user.email, resetToken);
+
+    res.status(200).json({ message: 'Reset link sent to email.' });
+
+  } catch (error) {
+    res.status(500).json({ message: 'Server error, please try again later.' });
+  }
+});
+
+// Reset password
+app.post('/api/auth/reset-password/:token', async (req, res) => {
+  try {
+    const { password } = req.body;
+    const { token } = req.params;
+
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ error: 'Invalid or expired token' });
+    }
+
+    // Hash new password
+    user.passwordHash = await bcrypt.hash(password, 10);
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+
+    await user.save();
+
+    res.json({ message: 'Password reset successful' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Update user profile
 app.patch('/api/auth/update-profile', authenticate, async (req, res) => {
   try {
     const { email, username, profile } = req.body;
 
     // Check if email/username is taken by another user
-    if (email !== req.user.email) {
+    if (email && email !== req.user.email) {
       const existingEmail = await User.findOne({ email, _id: { $ne: req.user._id } });
       if (existingEmail) {
         return res.status(400).json({ error: 'Email already in use' });
       }
+      req.user.email = email;
     }
 
-    if (username !== req.user.username) {
+    if (username && username !== req.user.username) {
       const existingUsername = await User.findOne({ username, _id: { $ne: req.user._id } });
       if (existingUsername) {
         return res.status(400).json({ error: 'Username already taken' });
       }
+      req.user.username = username;
     }
 
-    // Update user
-    req.user.email = email;
-    req.user.username = username;
     if (profile) {
       req.user.profile = { ...req.user.profile, ...profile };
     }
@@ -984,7 +801,6 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-// module.exports = app;
 module.exports = {
   app,
   User,
