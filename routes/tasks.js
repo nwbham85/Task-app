@@ -1,9 +1,10 @@
 // routes/tasks.js
-const express = require('express');
+import express from 'express';
+import Task from '../models/Task.js';
+import { authenticate } from '../middleware/auth.js';
+import { validateTask } from '../middleware/validation.js';
+
 const router = express.Router();
-const Task = require('../models/Task');
-const { authenticate } = require('../middleware/auth');
-const { validateTask } = require('../middleware/validation');
 
 // Get all tasks (with filters)
 router.get('/', authenticate, async (req, res) => {
@@ -224,4 +225,4 @@ router.patch('/:taskId/subtasks/:subtaskId', authenticate, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

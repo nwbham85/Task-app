@@ -1,8 +1,9 @@
 // routes/stats.js
-const express = require('express');
+import express from 'express';
+import Task from '../models/Task.js';
+import { authenticate } from '../middleware/auth.js';
+
 const router = express.Router();
-const Task = require('../models/Task');
-const { authenticate } = require('../middleware/auth');
 
 // Get user stats
 router.get('/user', authenticate, async (req, res) => {
@@ -45,4 +46,4 @@ router.get('/user', authenticate, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

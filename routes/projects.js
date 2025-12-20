@@ -1,10 +1,11 @@
 // routes/projects.js
-const express = require('express');
+import express from 'express';
+import Project from '../models/Project.js';
+import Task from '../models/Task.js';
+import { authenticate } from '../middleware/auth.js';
+import { validateProject } from '../middleware/validation.js';
+
 const router = express.Router();
-const Project = require('../models/Project');
-const Task = require('../models/Task');
-const { authenticate } = require('../middleware/auth');
-const { validateProject } = require('../middleware/validation');
 
 // Get all projects
 router.get('/', authenticate, async (req, res) => {
@@ -211,4 +212,4 @@ router.get('/:id/tasks', authenticate, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

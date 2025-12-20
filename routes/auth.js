@@ -1,12 +1,13 @@
 // routes/auth.js
-const express = require('express');
+import express from 'express';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
+import User from '../models/User.js';
+import { sendResetEmail } from '../utils/email.js';
+import { authenticate } from '../middleware/auth.js';
+
 const router = express.Router();
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
-const User = require('../models/User');
-const { sendResetEmail } = require('../utils/email');
-const { authenticate } = require('../middleware/auth');
 
 // Register
 router.post('/register', async (req, res) => {
@@ -203,4 +204,4 @@ router.patch('/update-profile', authenticate, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
