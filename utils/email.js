@@ -1,7 +1,7 @@
 // utils/email.js
-const nodemailer = require('nodemailer');
+import nodemailer from 'nodemailer';
 
-const sendResetEmail = async (email, token) => {
+export const sendResetEmail = async (email, token) => {
   const transporter = nodemailer.createTransporter({
     service: 'Gmail',
     auth: {
@@ -24,5 +24,3 @@ const sendResetEmail = async (email, token) => {
 
   await transporter.sendMail(mailOptions);
 };
-
-module.exports = { sendResetEmail };
