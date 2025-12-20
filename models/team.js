@@ -1,5 +1,5 @@
-
-const mongoose = require('mongoose');
+// models/Team.js
+import mongoose from 'mongoose';
 
 const teamSchema = new mongoose.Schema({
   name: { 
@@ -62,4 +62,4 @@ teamSchema.index({ createdBy: 1 });
 teamSchema.index({ 'members.userId': 1 });
 teamSchema.index({ name: 1 });
 
-module.exports = mongoose.model('Team', teamSchema);
+export default mongoose.model('Team', teamSchema);
