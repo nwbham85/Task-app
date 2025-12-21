@@ -382,6 +382,75 @@ input::placeholder {
   font-weight: 600;
 }
 
+/* ============================================
+   TEAM SETTINGS MODAL
+   ============================================ */
+
+.teamSettings {
+  display: none; /* hidden by default */
+  position: fixed;
+  inset: 0; /* top, right, bottom, left = 0 */
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1200;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.teamSettings-content {
+  background: white;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 420px;
+  padding: 28px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.teamSettings h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a202c;
+  margin-bottom: 16px;
+}
+
+/* Form */
+.teamSettings-form {
+  display: flex;
+  gap: 12px;
+}
+
+.teamSettings-form input {
+  flex: 1;
+  padding: 10px 14px;
+  font-size: 14px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.teamSettings-form input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.teamSettings-form button {
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  background: #667eea;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.teamSettings-form button:hover {
+  background: #5a67d8;
+}
+
+/* ===== */
+
 
 /* Main Content */
 .main-content {
@@ -765,4 +834,15 @@ body.dark .team-item:hover {
 body.dark .team-item.active {
   background: #667eea;
   color: white;
+}
+
+body.dark .teamSettings-content {
+  background: #1e293b;
+  color: #e5e7eb;
+}
+
+body.dark .teamSettings-form input {
+  background: #0f172a;
+  border-color: #334155;
+  color: #f1f5f9;
 }
