@@ -14,6 +14,10 @@ body {
   padding: 20px;
 }
 
+
+
+
+
 .container {
   width: 100%;
   max-width: 480px;
@@ -630,4 +634,55 @@ input::placeholder {
   .tasks-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  border: 1px solid #c3e6cb;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  border: 1px solid #f5c6cb;
+}
+
+body.dark {
+  background: #0f172a;
+}
+
+body.dark .auth-card,
+body.dark .stats-card,
+body.dark .filter-section,
+body.dark .task-card,
+body.dark .modal-content {
+  background: #1e293b;
+  color: #e5e7eb;
+}
+
+body.dark h1,
+body.dark h2,
+body.dark h3 {
+  color: #f1f5f9;
+}
+
+body.dark p,
+body.dark label,
+body.dark .subtitle {
+  color: #cbd5f5;
+}
+
+body.dark input,
+body.dark textarea,
+body.dark select {
+  background: #0f172a;
+  border-color: #334155;
+  color: #f1f5f9;
 }

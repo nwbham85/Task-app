@@ -310,3 +310,9 @@ document.getElementById('priorityFilter').addEventListener('change', loadTasks);
 // ============================================
 
 loadTasks();
+
+// enable dark mode
+const darkMode = document.getElementById('darkMode');
+darkMode.addEventListener('click', () => {
+  document.body.classList.toggle('dark');
+});
