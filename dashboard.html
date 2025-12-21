@@ -207,30 +207,27 @@
   </div>
 
   <!-- Team Settings Modal -->
-  <div id="teamSettingsModal" class="modal">
-    <div class="modal-content teamSettings-content">
+  
+  <div class="teamSettings" id="teamSettingsModal">
+    <div class="teamSettings-content">
       <div class="modal-header">
-        <h2>Team Settings</h2>
-        <button class="close-team-settings-modal">&times;</button>
+        <h3>Create team</h3>
+        <button id="closeTeamSettings" class="close-team-modal">×</button>
       </div>
 
-      <div style="padding: 32px;">
-        <h3>Manage Teams</h3>
-        <form class="teamSettings-form">
-          <input type="text" id="newTeamName" placeholder="Enter team name" />
-          <button type="submit">Add Team</button>
-        </form>
+      <input
+        type="text"
+        id="newTeamName"
+        placeholder="Team name"
+      />
 
-        <div style="margin-top: 24px;">
-          <ul id="teamSettingsList" class="team-list">
-            <!-- Teams will be listed here -->
-          </ul>
-        </div>
-      </div>
+      <button id="addTeamBtn" class="btn-primary">
+        Add team
+      </button>
     </div>
   </div>
 
   <script type="module" src="dashboard.js"></script>
-  <script type ='module' src="public/teams.js"></script>
+  
 </body>
 </html>
