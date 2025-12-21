@@ -344,7 +344,7 @@ input::placeholder {
   margin-bottom: 16px;
 }
 
-#teamSettings {
+.teamSettings-icon {
   cursor: pointer;
   font-size: 18px;
   opacity: 0.7;
@@ -354,6 +354,10 @@ input::placeholder {
   opacity: 1;
 }
 
+/* To this */
+.teamSettings-icon:hover {
+  opacity: 1;
+}
 
 /* Team List */
 .team-list {
@@ -392,11 +396,14 @@ input::placeholder {
   inset: 0; /* top, right, bottom, left = 0 */
   background: rgba(0, 0, 0, 0.5);
   z-index: 1200;
-
-  display: flex;
   align-items: center;
   justify-content: center;
 }
+
+.teamSettings.open {
+  display: flex;
+}
+
 
 .teamSettings-content {
   background: white;
@@ -412,6 +419,35 @@ input::placeholder {
   font-weight: 700;
   color: #1a202c;
   margin-bottom: 16px;
+}
+
+.close-team-modal {
+  background: none;
+  border: none;
+  font-size: 32px;
+  color: #a0aec0;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+}
+
+.close-team-modal:hover {
+  color: #718096;
+}
+
+#newTeamName {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+#addTeamBtn {
+  width: 100%;
 }
 
 /* Form */
