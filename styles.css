@@ -321,6 +321,49 @@ input::placeholder {
   border-color: #667eea;
 }
 
+/* Teams Card */
+.teams-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.teams-card h3 {
+  font-size: 18px;
+  color: #2d3748;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+/* Team List */
+.team-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.team-item {
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #4a5568;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.team-item:hover {
+  background: #f7fafc;
+}
+
+.team-item.active {
+  background: #667eea;
+  color: white;
+  font-weight: 600;
+}
+
+
 /* Main Content */
 .main-content {
   min-height: 500px;
@@ -653,6 +696,7 @@ input::placeholder {
   margin-bottom: 15px;
   border: 1px solid #f5c6cb;
 }
+ /* dark mode */
 
 body.dark {
   background: #0f172a;
@@ -685,4 +729,21 @@ body.dark select {
   background: #0f172a;
   border-color: #334155;
   color: #f1f5f9;
+}
+
+body.dark .teams-card {
+  background: #1e293b;
+}
+
+body.dark .team-item {
+  color: #cbd5f5;
+}
+
+body.dark .team-item:hover {
+  background: #334155;
+}
+
+body.dark .team-item.active {
+  background: #667eea;
+  color: white;
 }
