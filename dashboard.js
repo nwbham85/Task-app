@@ -329,3 +329,43 @@ darkMode.addEventListener('click', () => {
   const isDark = document.body.classList.contains('darkMode');
   localStorage.setItem('theme', isDark ? 'dark' : 'light');
 });
+
+// ============================================
+// TEAM SETTINGS MODAL (at the end of dashboard.js)
+// ============================================
+
+const teamSettingsModal = document.getElementById('teamSettingsModal');
+const teamSettingsIcon = document.querySelector('.teamSettings-icon');
+const closeTeamSettingsBtn = document.getElementById('closeTeamSettings');
+
+console.log('Team settings icon:', teamSettingsIcon); // Debug
+console.log('Team settings modal:', teamSettingsModal); // Debug
+
+// Open team settings modal
+if (teamSettingsIcon) {
+  teamSettingsIcon.addEventListener('click', () => {
+    console.log('Icon clicked!'); // Debug
+    teamSettingsModal.classList.add('open');
+  });
+}
+
+// Close team settings modal
+if (closeTeamSettingsBtn) {
+  closeTeamSettingsBtn.addEventListener('click', () => {
+    teamSettingsModal.classList.remove('open');
+  });
+}
+
+// Update the existing window click handler to include team settings
+// Find this in your dashboard.js and update it:
+window.addEventListener('click', (e) => {
+  if (e.target === modal) {
+    modal.style.display = 'none';
+  }
+  if (e.target === settingsModal) {
+    settingsModal.style.display = 'none';
+  }
+  if (e.target === teamSettingsModal) {
+    teamSettingsModal.classList.remove('open');
+  }
+});
