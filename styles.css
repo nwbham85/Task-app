@@ -336,6 +336,25 @@ input::placeholder {
   font-weight: 600;
 }
 
+/* team header  */
+.teams-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+#teamSettings {
+  cursor: pointer;
+  font-size: 18px;
+  opacity: 0.7;
+}
+
+#teamSettings:hover {
+  opacity: 1;
+}
+
+
 /* Team List */
 .team-list {
   list-style: none;
