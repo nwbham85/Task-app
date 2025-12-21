@@ -311,8 +311,21 @@ document.getElementById('priorityFilter').addEventListener('change', loadTasks);
 
 loadTasks();
 
-// enable dark mode
+// ===== dark mode ====
+
+  // read saved preference on load
+  // save preference when toggled
+const savedTheme = localStorage.getItem('theme');
+
+if (savedTheme === 'darkMode') {
+  document.body.classList.add('darkMode');
+}
+
+
 const darkMode = document.getElementById('darkMode');
 darkMode.addEventListener('click', () => {
   document.body.classList.toggle('dark');
+
+  const isDark = document.body.classList.contains('darkMode');
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
 });
