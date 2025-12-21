@@ -65,11 +65,13 @@
           <option value="urgent">Urgent</option>
         </select>
       </div>
+
+      <!-- Teams Card - Inside Sidebar -->
       <div class="teams-card">
-          <div class="teams-header">
-            <h3>Teams</h3>
-            <h3 id="teamSettings" class="teamSettings">⚙️</h3>
-          </div>
+        <div class="teams-header">
+          <h3>Teams</h3>
+          <span id="teamSettings" class="teamSettings-icon">⚙️</span>
+        </div>
 
         <ul class="team-list">
           <li class="team-item active">Engineering</li>
@@ -78,7 +80,6 @@
           <li class="team-item">Design</li>
         </ul>
       </div>
-</div>
     </aside>
 
     <!-- Main Tasks Area -->
@@ -206,19 +207,30 @@
   </div>
 
   <!-- Team Settings Modal -->
-<div class="teamSettings">
-  <div class="teamSettings-content">
-    <h3>Create team</h3>
+  <div id="teamSettingsModal" class="modal">
+    <div class="modal-content teamSettings-content">
+      <div class="modal-header">
+        <h2>Team Settings</h2>
+        <button class="close-team-settings-modal">&times;</button>
+      </div>
 
-    <input type="text" placeholder="Team name" />
-    <button class="btn-primary">Add team</button>
+      <div style="padding: 32px;">
+        <h3>Manage Teams</h3>
+        <form class="teamSettings-form">
+          <input type="text" id="newTeamName" placeholder="Enter team name" />
+          <button type="submit">Add Team</button>
+        </form>
+
+        <div style="margin-top: 24px;">
+          <ul id="teamSettingsList" class="team-list">
+            <!-- Teams will be listed here -->
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
-
-</body>
-
 
   <script type="module" src="dashboard.js"></script>
-  <script  src="public/teams.js"></script>
+  <script src="public/teams.js"></script>
 </body>
 </html>
