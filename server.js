@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
+import session from 'express-session';
 
 // Import Routes
 import authRoutes from './routes/auth.js';
@@ -31,6 +32,13 @@ const app = express();
 // ============================================
 app.use(express.json());
 app.use(express.static(__dirname));
+
+app.use(session({
+  secret: 'my-super-secret-key', // Use a random string
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set to true if using HTTPS
+}));
 
 // ============================================
 // ROUTES
