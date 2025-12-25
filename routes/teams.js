@@ -35,20 +35,33 @@ router.post('/createteam', async (req, res) => {
     }
 });
 
-router.post('/helloworld', (request, response) => {
-    // 1. receive request from postman
-    const {message , sender} = request.body;
-    console.log(`incoming message from: ${sender}: ${message}`);
+// routes/teams.js
 
-    // 2 send back a response
-    response.status(200).json({
-        status: 'success',
-        received: {
-            text: message,
-            from: sender
-        },
-        serverTime: new Date().toLocaleDateString()
-    });
+router.post('/helloworld', async (req, res) => {
+    try {
+        // 1. The "Try" - attempting the logic
+        const { message, sender } = req.body;
+
+        // Intentional check: What if the user didn't send a message?
+        if (!message) {
+            // We "throw" an error to jump straight to the catch block
+            throw new Error("No message was provided in the request body.");
+        }
+
+        res.status(200).json({
+            status: "Success",
+            reply: `Hello ${sender}, I received your message: ${message}`
+        });
+
+    } catch (error) {
+        // 2. The "Catch" - the safety net
+        console.error("❌ Route Error:", error.message);
+
+        // Tell Postman/Browser exactly what went wrong
+        res.status(400).json({
+            status: "Error",
+            message: error.message
+        });
+    }
 });
-
 export default router;
