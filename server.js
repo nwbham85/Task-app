@@ -40,6 +40,8 @@ app.use(session({
   cookie: { secure: false } // Set to true if using HTTPS
 }));
 
+app.use('/teams', teamRoutes);
+
 // ============================================
 // ROUTES
 // ============================================
