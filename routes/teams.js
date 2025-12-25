@@ -35,4 +35,20 @@ router.post('/createteam', async (req, res) => {
     }
 });
 
+router.post('/helloworld', (request, response) => {
+    // 1. receive request from postman
+    const {message , sender} = request.body;
+    console.log(`incoming message from: ${sender}: ${message}`);
+
+    // 2 send back a response
+    response.status(200).json({
+        status: 'success',
+        received: {
+            text: message,
+            from: sender
+        },
+        serverTime: new Date().toLocaleDateString()
+    });
+});
+
 export default router;
