@@ -204,4 +204,16 @@ router.patch('/update-profile', authenticate, async (req, res) => {
   }
 });
 
+// saving id during login
+
+router.post('/login', async (req, res) => {
+    const user = await User.findOne({ email: req.body.email });
+    // ... check password ...
+
+    // Give them the "wristband" (save their ID to the session)
+    req.session.userId = user._id; 
+    
+    res.send("Logged in!");
+});
+
 export default router;
