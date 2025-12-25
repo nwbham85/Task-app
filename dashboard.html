@@ -215,17 +215,64 @@
         <button id="closeTeamSettings" class="close-team-modal">×</button>
       </div>
 
+      <div class="profilePhoto" name="profilePhoto">
+        <h3>Upload photo</h3>
+        <input type="file" class = 'uploadFile' name="uploadFile" placeholder="upload file">
+      </div>
+
       <input
         type="text"
         id="newTeamName"
         placeholder="Team name"
       />
 
+      <label>
+        <p>Team Size: (leave empty for unlimited size)</p>
+        <input class="teamSize" name="teamSize" type="number">
+      </label>
+
+      <label class="toggle-private">
+          Is Private
+          <input type="checkbox">
+          <span class="slider"></span>
+      </label>
+
+
       <button id="addTeamBtn" class="btn-primary">
         Add team
       </button>
     </div>
   </div>
+
+  <script>
+    document.getElementById('addTeamBtn').addEventListener('click', async () => {
+    // 1. Grab the values from your HTML inputs
+    const name = document.getElementById('newTeamName').value;
+    const teamSize = document.querySelector('.teamSize').value;
+    const isPrivate = document.querySelector('.toggle-private input').checked;
+
+    // 2. Wrap them in an object (The "Envelope")
+    const teamData = {
+        name: name,
+        teamSize: teamSize,
+        isPrivate: isPrivate
+    };
+
+    // 3. Send it to your Node server
+    const response = await fetch('/teams/createteam', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(teamData)
+    });
+
+    const result = await response.json();
+    alert(result.message);
+});
+  </script>
+
+  <!-- ----------- -->
 
   <script type="module" src="dashboard.js"></script>
   
