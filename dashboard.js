@@ -172,6 +172,10 @@ function displayTasks(tasks) {
         <div class="task-tags">
           ${task.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
         </div>
+
+        <div class='comments'>
+        <p>comments</p>
+        </div>
       ` : ''}
     </div>
   `).join('');
