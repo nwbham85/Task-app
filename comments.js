@@ -62,7 +62,8 @@ function renderComments(taskId, comments) {
   const username = window.currentUser?.username;
 
   listEl.innerHTML = comments.map(c => {
-    const canDelete = username && (c.user?.username === username || c.user === window.currentUser?._id);
+    const canDelete = window.currentUser?.username && (c.user?.username === window.currentUser.username);
+
     return `
       <div class="comment-item" data-comment-id="${c._id}">
         <div class="comment-top">
