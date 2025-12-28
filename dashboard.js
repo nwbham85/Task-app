@@ -2,6 +2,9 @@
 // Check authentication
 const token = localStorage.getItem('token');
 let user = JSON.parse(localStorage.getItem('user') || '{}');
+// Expose current user for comments.js
+window.currentUser = user;
+
 
 if (!token) {
   window.location.href = 'login.html';
@@ -30,6 +33,9 @@ async function apiCall(endpoint, options = {}) {
 
   return response.json();
 }
+// Expose apiCall for other modules (comments.js)
+window.apiCall = apiCall;
+
 
 // Logout
 document.getElementById('logoutBtn').addEventListener('click', () => {
@@ -102,6 +108,8 @@ document.getElementById('settingsForm').addEventListener('submit', async (e) => 
       user = result;
       localStorage.setItem('user', JSON.stringify(result));
       document.getElementById('userName').textContent = result.username;
+      window.currentUser = user;
+
       
       successDiv.style.display = 'block';
       
