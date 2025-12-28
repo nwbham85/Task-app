@@ -2,16 +2,15 @@
 import express from 'express';
 import Comment from '../models/Comment.js';
 import Task from '../models/Task.js';
-import { authMiddleware } from '../middleware/authMiddleware.js';
+import { authenticate } from '../middleware/auth.js';
 
 const router = express.Router();
 
 // GET comments for a task
-router.get('/tasks/:taskId/comments', authMiddleware, async (req, res) => {
+router.get('/tasks/:taskId/comments', authenticate, async (req, res) => {
   try {
     const { taskId } = req.params;
 
-    // Optional: verify task exists
     const taskExists = await Task.exists({ _id: taskId });
     if (!taskExists) return res.status(404).json({ error: 'Task not found' });
 
@@ -26,7 +25,7 @@ router.get('/tasks/:taskId/comments', authMiddleware, async (req, res) => {
 });
 
 // POST comment for a task
-router.post('/tasks/:taskId/comments', authMiddleware, async (req, res) => {
+router.post('/tasks/:taskId/comments', authenticate, async (req, res) => {
   try {
     const { taskId } = req.params;
     const { text } = req.body;
@@ -40,12 +39,11 @@ router.post('/tasks/:taskId/comments', authMiddleware, async (req, res) => {
 
     const comment = await Comment.create({
       task: taskId,
-      user: req.user.id, // authMiddleware must set req.user
+      user: req.user._id,          // ✅ THIS is the key change
       text: text.trim()
     });
 
     const populated = await Comment.findById(comment._id).populate('user', 'username');
-
     const commentsCount = await Comment.countDocuments({ task: taskId });
 
     res.status(201).json({ comment: populated, commentsCount });
@@ -55,15 +53,15 @@ router.post('/tasks/:taskId/comments', authMiddleware, async (req, res) => {
 });
 
 // DELETE a comment by id (author only)
-router.delete('/comments/:commentId', authMiddleware, async (req, res) => {
+router.delete('/comments/:commentId', authenticate, async (req, res) => {
   try {
     const { commentId } = req.params;
 
     const comment = await Comment.findById(commentId);
     if (!comment) return res.status(404).json({ error: 'Comment not found' });
 
-    // Only author can delete (simple rule)
-    if (String(comment.user) !== String(req.user.id)) {
+    // Only author can delete
+    if (String(comment.user) !== String(req.user._id)) {   // ✅ uses req.user._id
       return res.status(403).json({ error: 'Not allowed' });
     }
 
