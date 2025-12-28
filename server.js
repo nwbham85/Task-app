@@ -12,6 +12,7 @@ import taskRoutes from './routes/tasks.js';
 import projectRoutes from './routes/projects.js';
 import statsRoutes from './routes/stats.js';
 import teamRoutes from './routes/teams.js';
+import commentRoutes from './routes/comment_routes.js';
 
 // Import Models (for export)
 import User from './models/User.js';
@@ -41,6 +42,8 @@ app.use(session({
 }));
 
 app.use('/teams', teamRoutes);
+
+app.use('/api', commentRoutes);
 
 // ============================================
 // ROUTES
