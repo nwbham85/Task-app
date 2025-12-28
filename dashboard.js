@@ -146,39 +146,63 @@ function displayTasks(tasks) {
 
   emptyState.style.display = 'none';
   container.innerHTML = tasks.map(task => `
-    <div class="task-card" data-id="${task._id}">
-      <div class="task-header">
-        <h3>${task.title}</h3>
-        <div class="task-actions">
-          <button class="btn-icon edit-task" data-id="${task._id}">✏️</button>
-          <button class="btn-icon delete-task" data-id="${task._id}">🗑️</button>
-        </div>
+  <div class="task-card" data-id="${task._id}">
+    <div class="task-header">
+      <h3>${task.title}</h3>
+      <div class="task-actions">
+        <button class="btn-icon edit-task" data-id="${task._id}">✏️</button>
+        <button class="btn-icon delete-task" data-id="${task._id}">🗑️</button>
       </div>
-      
-      ${task.description ? `<p class="task-description">${task.description}</p>` : ''}
-      
-      <div class="task-meta">
-        <span class="badge badge-${task.status}">${task.status.replace('_', ' ')}</span>
-        <span class="badge badge-priority-${task.priority}">${task.priority}</span>
+    </div>
+
+    ${task.description ? `<p class="task-description">${task.description}</p>` : ''}
+
+    <div class="task-meta">
+      <span class="badge badge-${task.status}">${task.status.replace('_', ' ')}</span>
+      <span class="badge badge-priority-${task.priority}">${task.priority}</span>
+    </div>
+
+    ${task.dueDate ? `
+      <div class="task-due-date ${new Date(task.dueDate) < new Date() && task.status !== 'done' ? 'overdue' : ''}">
+        📅 ${new Date(task.dueDate).toLocaleDateString()}
       </div>
-      
-      ${task.dueDate ? `
-        <div class="task-due-date ${new Date(task.dueDate) < new Date() && task.status !== 'done' ? 'overdue' : ''}">
-          📅 ${new Date(task.dueDate).toLocaleDateString()}
-        </div>
-      ` : ''}
-      
-      ${task.tags && task.tags.length > 0 ? `
-        <div class="task-tags">
-          ${task.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+    ` : ''}
+
+    ${task.tags && task.tags.length > 0 ? `
+      <div class="task-tags">
+        ${task.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+      </div>
+    ` : ''}
+
+    <!-- ✅ COMMENTS SECTION (always present) -->
+    <div class="task-comments" data-task-id="${task._id}">
+      <div class="comments-header">
+        <button class="toggle-comments" type="button" data-task-id="${task._id}">
+          💬 Comments <span class="comment-count" data-task-id="${task._id}">(0)</span>
+        </button>
+      </div>
+
+      <div class="comments-body hidden" data-task-id="${task._id}">
+        <div class="comments-list" data-task-id="${task._id}">
+          <div class="comment-empty">Open to load comments.</div>
         </div>
 
-        <div class='comments'>
-        <p>comments</p>
-        </div>
-      ` : ''}
+        <form class="comment-form" data-task-id="${task._id}">
+          <input
+            class="comment-input"
+            name="comment"
+            placeholder="Write a comment…"
+            maxlength="280"
+            required
+          />
+          <button class="comment-submit" type="submit">Post</button>
+        </form>
+      </div>
     </div>
-  `).join('');
+
+  </div>
+`).join('');
+
 
   // Add event listeners for edit and delete
   document.querySelectorAll('.edit-task').forEach(btn => {
