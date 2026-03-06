@@ -5,6 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import session from 'express-session';
+import cors from 'cors';
 
 // Import Routes
 import authRoutes from './routes/auth.js';
@@ -31,8 +32,11 @@ const app = express();
 // ============================================
 // MIDDLEWARE
 // ============================================
+
+app.use(cors()); 
 app.use(express.json());
-app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname)); 
 
 app.use(session({
   secret: 'my-super-secret-key', // Use a random string
