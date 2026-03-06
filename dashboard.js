@@ -1,7 +1,16 @@
 // dashboard.js
+
+// local storage object
+const STORAGE_KEYS = {
+  TOKEN: 'token',
+  USER: 'user',
+  THEME: 'theme'
+};
+
+
 // Check authentication
-const token = localStorage.getItem('token');
-let user = JSON.parse(localStorage.getItem('user') || '{}');
+const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
+let user = JSON.parse(localStorage.getItem(STORAGE_KEYS.USER) || '{}');
 // Expose current user for comments.js
 window.currentUser = user;
 
@@ -39,8 +48,8 @@ window.apiCall = apiCall;
 
 // Logout
 document.getElementById('logoutBtn').addEventListener('click', () => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
+  localStorage.removeItem(STORAGE_KEYS.TOKEN);
+  localStorage.removeItem(STORAGE_KEYS.USER);
   window.location.href = 'login.html';
 });
 
@@ -351,7 +360,7 @@ loadTasks();
 
   // read saved preference on load
   // save preference when toggled
-const savedTheme = localStorage.getItem('theme');
+const savedTheme = localStorage.getItem(STORAGE_KEYS.THEME);
 
 if (savedTheme === 'darkMode') {
   document.body.classList.add('darkMode');
@@ -363,7 +372,7 @@ darkMode.addEventListener('click', () => {
   document.body.classList.toggle('dark');
 
   const isDark = document.body.classList.contains('darkMode');
-  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  localStorage.setItem(STORAGE_KEYS.THEME, isDark ? 'dark' : 'light');
 });
 
 // ============================================
