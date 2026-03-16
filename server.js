@@ -8,11 +8,7 @@ import session from 'express-session';
 import cors from 'cors';
 
 // Import Routes
-import authRoutes from './routes/auth.js';
-import taskRoutes from './routes/tasks.js';
-import projectRoutes from './routes/projects.js';
-import statsRoutes from './routes/stats.js';
-import teamRoutes from './routes/teams.js';
+
 import commentRoutes from './routes/comment_routes.js';
 
 // Import Models (for export)
