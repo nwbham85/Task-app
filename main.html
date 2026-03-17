@@ -27,6 +27,23 @@
 
 
 
+<script>
+  document.querySelector('.postBtn').addEventListener('click', async () => {
+    const input = document.querySelector('input[name="comment"]');
+    const text = input.value.trim();
 
+    if (!text) return;
+
+    const res = await fetch('/comments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ comment: text, creator: 'john', tags: '#tag' })
+    });
+
+    const data = await res.json();
+    console.log('Saved:', data);
+    input.value = '';
+  });
+</script>
 </body>
 </html>
