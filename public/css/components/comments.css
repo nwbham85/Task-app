@@ -29,6 +29,7 @@
 .comments {
   margin:20px auto;
   display:flex;
+  flex-direction: column;
 }
 
 .comments .editBtn:hover {
