@@ -1,1 +1,1 @@
-console.log('text');
+import comments from './comments.js';
