@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <link rel="stylesheet" href="/css/components/comments.css">
-  <script type="module" src="/main.js"></script>
+  <link rel="stylesheet" href="main.css">
+  <script type="module" src="main.js"></script>
 <style>
 
 * {
@@ -44,8 +44,8 @@
 <body>
 <section class="app">
   <nav class="navbar">
-    <button type = 'button' class="navBtn" name="register">Register</button>
-    <button type = 'button' class="navBtn" name="login">Login</button>
+    <button type = 'button' class="navBtn register" name="register">Register</button>
+    <button type = 'button' class="navBtn login" name="login">Login</button>
   </nav>
 
 
@@ -57,6 +57,7 @@
     </div>
     <div class="comments">
       <!-- content added through js -->
+        
     </div>
   </section>
 
@@ -65,6 +66,36 @@
 
 
 
+<!-- login modal -->
+<div class="modal">
+  <div class="modal-content">
+    <span class="modal-close">&times;</span>
+
+    <h3>Login</h3>
+
+    <div class="input">
+      <input
+        type="text"
+        class="login-username"
+        required
+        minlength="2"
+        placeholder="username"
+      >
+
+      <input
+        type="password"
+        class="login-password"
+        required
+        minlength="5"
+        placeholder="password"
+      >
+
+      <button type="button" class="click">Post</button>
+    </div>
+  </div>
+</div>
+
+<!--  -->
 
 </body>
 </html>

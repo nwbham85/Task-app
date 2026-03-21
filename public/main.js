@@ -1,7 +1,8 @@
 import { comment } from './comments.js';
+import { modal } from './modal.js';
 
-document.querySelector('.postBtn')
-  .addEventListener('click', () => comment.postComment());
-
-// Load existing comments on page open
-comment.loadComments();
+document.addEventListener('DOMContentLoaded', () => {
+  comment.init();
+  comment.loadComments();
+  modal.init();
+});

@@ -32,6 +32,10 @@
   flex-direction: column;
 }
 
+.comment:hover {
+  background-color:lightgray;
+}
+
 .comments .editBtn:hover {
   color:lightgray;
   cursor:pointer;

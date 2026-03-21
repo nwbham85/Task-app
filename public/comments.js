@@ -1,4 +1,11 @@
 export const comment = {
+  init() {
+    const postBtn = document.querySelector('.postBtn');
+
+    if (!postBtn) return;
+
+    postBtn.addEventListener('click', () => this.postComment());
+  },
 
   async postComment() {
     const input = document.querySelector('input[name="comment"]');
@@ -41,5 +48,4 @@ export const comment = {
       </div>
     `).join('');
   }
-
-}
+};
