@@ -6,9 +6,47 @@
   <title>Document</title>
   <link rel="stylesheet" href="/css/components/comments.css">
   <script type="module" src="/main.js"></script>
+<style>
 
+* {
+  padding:0;
+  margin:0;
+  box-sizing: border-box;
+}
+
+.app {
+  padding:10px;
+}
+.navbar {
+  display:flex;
+  justify-content: right;
+  gap:10px;
+  border:2px solid black;
+  padding:20px;
+  border-radius: 10px;
+  margin-bottom: 5px;
+}
+
+.navbar .navBtn {
+  color:black;
+  font-weight: 700;
+  padding:5px;
+  border-radius: 10px;
+}
+
+.navBtn:hover {
+  color:lightseagreen;
+  cursor: pointer;
+}
+
+</style>
 </head>
 <body>
+<section class="app">
+  <nav class="navbar">
+    <button type = 'button' class="navBtn" name="register">Register</button>
+    <button type = 'button' class="navBtn" name="login">Login</button>
+  </nav>
 
 
   <section class="comment-container">
@@ -18,13 +56,11 @@
       <button type="button" class="postBtn" name="submit-comment">Send</button>
     </div>
     <div class="comments">
-      <p class="comment"></p><span><button class='editBtn' type='click'>Edit</button></span>
-    </div>
-    <div class="comment-footer">
-      <p class="postDate"></p><span class="postCreator"></span><span class="tags"></span>
+      <!-- content added through js -->
     </div>
   </section>
 
+</section>
   
 
 
