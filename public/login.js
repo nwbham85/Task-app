@@ -1,37 +1,42 @@
 export const login = {
-init() {},
+  init() {
+    const loginBtn = document.querySelector('.loginBtn');
+    console.log('init ran');
+    console.log('button found:', loginBtn);
 
-async Validate() {
-    const userLogin = document.querySelector('.login-username');
-    const userPassword = document.querySelector('.login-password');
-    const login = document.querySelector('.loginBtn');
+    if (!loginBtn) return;
 
-    if(!userLogin || userLogin.length < 2) {
-        alert('Thats not a valid username.');
-        return;
-    } 
-    
-    try {
-        const res = await fetch(`/users?username=${userLogin}`);
+    loginBtn.addEventListener('click', () => {
+      console.log('login button clicked');
+      this.validate();
+    });
+  },
 
-        if (!res.ok) {
-            throw new Error('server error');
-        }
+  async validate() {
+    console.log('validate ran');
 
-        const data = await res.json();
+    const username = document.querySelector('.login-username')?.value.trim();
+    const password = document.querySelector('.login-password')?.value.trim();
 
-        if (!data.exists) {
-            alert('user does not exist');
-            return;
-        }
+    console.log('username:', username);
+    console.log('password:', password);
 
-        console.log('user exists:', data.user);
-
-    } catch(err) {
-        console.error(err);
-        alert('something went wrong.');
+    if (!username || username.length < 2) {
+      alert('Invalid username');
+      return;
     }
 
+    const res = await fetch(`/users?username=${username}`);
+    console.log('status:', res.status);
 
- }
+    const data = await res.json();
+    console.log('data:', data);
+
+    if (!data.exists) {
+      alert('User not found');
+      return;
+    }
+
+    alert('User exists');
+  }
 };
