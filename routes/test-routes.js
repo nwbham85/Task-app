@@ -1,15 +1,13 @@
 import {Router} from 'express';
 
-// create router
+import express from 'express';
+
 export default function testRoutes(db) {
     const router = express.Router();
+
+    router.get('/', (req, res) => {
+        res.json({ message: 'test route working' });
+    });
+
+    return router;
 }
-
-//add the route
-
-router.get('./', (req,res) => {
-    res.json({message: 'test route working'});
-});
-
-//export it
-return router;
