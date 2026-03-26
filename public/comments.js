@@ -13,7 +13,7 @@ export const comment = {
 
     if (!text) return;
 
-    const res = await fetch('/comments', {
+    const res = await fetch('/api/comments', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ comment: text, creator: 'john', tags: '#tag' })

@@ -2,7 +2,7 @@ import express from 'express';
 import { MongoClient, ObjectId } from 'mongodb';
 import commentRoutes from './routes/comment_routes.js';
 import userRoutes from './routes/users_routes.js';
-import test from './routes/test-routes.js';
+import testRoutes from './routes/test-routes.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -18,7 +18,7 @@ const db = client.db('taskapp');
 
 app.use('/api/users', userRoutes(db));
 app.use('/api/comments', commentRoutes(db));
-app.use('/api/test', test(db));
+app.use('/api/test', testRoutes(db));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'main.html'));
