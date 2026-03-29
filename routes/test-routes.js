@@ -1,19 +1,22 @@
-import {Router} from 'express';
 import express from 'express';
+import Test from '../models/Test.js';
 
+export default function testRoutes() {
+  const router = express.Router();
 
+  router.get('/', async (req, res) => {
+    try {
+      const docs = await Test.find();
 
-export default function testRoutes(db) {
-    const router = express.Router();
-
-    router.get('/', async (req, res) => {
-    const docs = await db.collection('test').find().toArray();
-
-    res.json({
+      res.json({
         message: 'test route working',
         data: docs
-    });
-});
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Server error' });
+    }
+  });
 
-    return router;
+  return router;
 }

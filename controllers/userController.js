@@ -1,6 +1,6 @@
 import User from '../models/User.js';
 
-export function getUserByUsername(db) {
+export function getUserByUsername() {
   return async function (req, res) {
     const { username } = req.query;
 
@@ -9,7 +9,7 @@ export function getUserByUsername(db) {
     }
 
     try {
-      const user = await User.findOne({username});
+      const user = await User.findOne({ username });
 
       if (!user) {
         return res.json({ exists: false });

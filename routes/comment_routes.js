@@ -1,29 +1,35 @@
-import { Router } from 'express';
+import express from 'express';
+import Comment from '../models/Comment.js';
 
-export default (db) => {
-  const router = Router();
-  const comments = db.collection('comments');
+export default function commentRoutes() {
+  const router = express.Router();
 
   router.get('/', async (req, res) => {
-    const all = await comments.find().toArray();
-    res.json(all);
+    try {
+      const comments = await Comment.find().sort({ createdAt: -1 });
+      res.json(comments);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Server error' });
+    }
   });
 
   router.post('/', async (req, res) => {
-    const { comment, creator, tags } = req.body;
+    try {
+      const { username, text } = req.body;
 
-    if (!comment || comment.length < 2 || comment.length > 150) {
-      return res.status(400).json({ error: 'Comment must be 2–150 characters' });
+      if (!username || !text) {
+        return res.status(400).json({ error: 'username and text are required' });
+      }
+
+      const newComment = await Comment.create({ username, text });
+
+      res.status(201).json(newComment);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Server error' });
     }
-
-    const result = await comments.insertOne({
-      comment,
-      creator,
-      tags,
-      date: new Date()
-    });
-    res.json(result);
   });
 
   return router;
-};
+}
