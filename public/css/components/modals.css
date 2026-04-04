@@ -16,6 +16,12 @@
   position: relative;
 }
 
+/* .manager-modal {
+  height:200px;
+} */
+
+
+
 .modal-close {
   position: absolute;
   top: 10px;

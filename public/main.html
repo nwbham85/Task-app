@@ -38,6 +38,39 @@
   color:lightseagreen;
   cursor: pointer;
 }
+      /* directory */
+
+.directory {
+  
+}
+.nonprofit-card {
+  display:flex;
+  flex-direction: column;
+  gap:10px;
+  border:1px solid black;
+  border-radius: 10px;
+  padding:20px;
+  margin:10px;
+}
+
+.nonprofit-card :nth-child(1) {
+  margin-top:10px;
+}
+
+.nonprofit-card .rolesList {
+  list-style:disc;
+  padding-left:10px;
+}
+
+.rolesList {
+  display:flex;
+  flex-direction: column;
+}
+
+.roleItem {
+  display:flex;
+  justify-content: space-between;
+}
 
 </style>
 </head>
@@ -48,6 +81,33 @@
     <button type = 'button' class="navBtn register" name="register">Register</button>
     <button type = 'button' class="navBtn login" name="login">Login</button>
   </nav>
+
+  <section class="directory">
+    <h3 class="directory-header">Directory</h3>
+      <div class="nonprofit-card">
+        <p>Name: <span class="nonprofit-name">Foodbank</span></p>
+        <p>About us:</p>
+        <p>Positions available: <span class="positionAmt">2</span></p>
+        
+          <ul class="rolesList">
+            <p>Roles:</p>
+            <li class="roleItem">Bagger<span class="descrip">Description: put food in bags.</span><span class="hoursNeeded"> 5hrs</span><span class="payout">Payout: $100</span><span><button class="apply">Apply</button></button></span></li>
+            <li class="roleItem">other</li>
+          </ul>
+      </div>
+
+      <div class="nonprofit-card">
+        <p>Name: <span class="nonprofit-name">Foodbank</span></p>
+        <p>About us:</p>
+        <p>Positions available: <span class="positionAmt">2</span></p>
+        
+          <ul class="rolesList">
+            <p>Roles:</p>
+            <li class="roleItem">Bagger<span class="hoursNeeded"> 5hrs</span><span class="payout">Payout: $100</span><span><button class="apply">Apply</button></button></span></li>
+            <li class="roleItem">other</li>
+          </ul>
+      </div>
+  </section>
 
 
   <section class="comment-container">

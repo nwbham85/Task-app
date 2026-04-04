@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import commentRoutes from './routes/comment_routes.js';
 import userRoutes from './routes/users_routes.js';
 import testRoutes from './routes/test-routes.js';
+import managerRoutes from './routes/manager_route.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -21,6 +22,7 @@ console.log('db connected via mongoose');
 app.use('/api/users', userRoutes());
 app.use('/api/comments', commentRoutes());
 app.use('/api/test', testRoutes());
+app.use('/api/manager', managerRoutes());
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'main.html'));

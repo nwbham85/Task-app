@@ -1,4 +1,4 @@
-import User from '../models/User.js';
+import Users from '../models/Users.js';
 
 export function getUserByUsername() {
   return async function (req, res) {

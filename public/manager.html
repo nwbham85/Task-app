@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="main.css">
+    <script type="module" src="manager.js"></script>
+<style>
+
+    * {
+        padding:0;
+        margin:0;
+        box-sizing: border-box;
+    }
+
+    body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    }
+
+    a {
+        text-decoration: none;
+        color:black;
+    }
+
+    a:hover {
+        color:grey;
+        cursor: pointer;
+    }
+
+    .main {
+        border:1px solid black;
+        border-radius: 10px;
+        padding:20px;
+        display:flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        max-width: 500px;
+
+    }
+
+    .input {
+        margin:5px;
+        line-height: 2.5;
+        font-size:18px;
+        padding:5px;
+    }
+
+    .footer {
+        display:flex;
+        justify-content: space-between;
+        width:100%;
+        
+    }
+
+    .login {
+        padding:5px;
+    }
+
+    .login:hover {
+        cursor: pointer;
+        color:grey;
+    }
+</style>
+</head>
+<body>
+
+    <section class="main">
+        <input  class="input email" type="email" required placeholder="Email" maxlength="50">
+        <input  class="input password" type="password" required placeholder="Password" minlength="5" maxlength="50">
+        <div class="footer">
+            <p><a href="createManager.html" class="createAccount">Create Account</a></p>
+            <button type="button" class="login">Login</button>
+        </div>
+    </section>
+    
+
+
+
+
+<!-- register modal -->
+
+<div class="modal">
+  <div class="modal-content manager-modal">
+    <span class="modal-close">&times;</span>
+
+    <h3>Register your nonprofit</h3>
+
+    <div class="input">
+      <input
+        type="text"
+        class="register-nonprofit"
+        required
+        maxlength="50"
+        placeholder="Your professional email"
+      >
+
+      <input
+        type="password"
+        class="register-password"
+        required
+        minlength="5"
+        placeholder="create password of at least five characters"
+      >
+
+      <button type="button" class="registerBtn">Create Account</button>
+    </div>
+  </div>
+</div>
+
+
+
+</body>
+</html>
