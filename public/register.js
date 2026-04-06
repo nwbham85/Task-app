@@ -1,54 +1,47 @@
 export const register = {
+  init() {
+    const registerBtn = document.querySelector('.registerBtn');
+    if (!registerBtn) return;
+    registerBtn.addEventListener('click', () => {
+      this.validate();
+    });
+  },
 
-    init(){
+  async validate() {
+    const emailInput = document.querySelector('.register-email');
+    const passwordInput = document.querySelector('.register-password');
 
-        // check for db connection
-        this.checkConnection();
-    },
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
 
-    async checkConnection(){
-        let isConnected;
-        try {
-            isConnected = await fetch('./');
-            console.log('status', isConnected.status);
-    
-        }catch (err) {
-            console.error('connection failed', err);
-            return;
-        }
-    },  
+    if (!email || !password) {
+      alert('Complete all fields.');
+      return;
+    }
+    if (password.length < 5) {
+      alert('Password must be at least 5 characters.');
+      return;
+    }
 
-    async validate() {
-        const usernameInput = document.querySelector('.register-username');
-        const username = usernameInput.value.trim();
+    try {
+      const registerResponse = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
 
-        if(!username) {
-            console.log('input username');
-            return;
-        }
+      const data = await registerResponse.json();
 
-        try {
-            const response = await fetch('/users');
-            console.log('server response code', response.status);
+      if (!registerResponse.ok) {
+        alert(data.message || 'Registration failed.');
+        return;
+      }
 
-            if (!response.ok) {
-                throw new Error(`http error ${response.status}`);
-            }
+      alert('Registration successful!');
 
-            const users = await response.json();
-            const foundUser = users.find(user => user.username === username);
-
-            if (foundUser) {
-                console.log('user exists:', foundUser);
-                return false;
-            } else {
-                console.log('user does not exist');
-                return true;
-            }
-         } catch(err) {
-            console.error('did not find user/ request failed'. err);
-            return false;
-         }
-     }
-
-}
+    } catch (err) {
+      console.error('Registration error:', err);
+      alert('Something went wrong.');
+    }
+  }
+};

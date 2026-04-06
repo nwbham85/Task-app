@@ -4,6 +4,8 @@ import commentRoutes from './routes/comment_routes.js';
 import userRoutes from './routes/users_routes.js';
 import testRoutes from './routes/test-routes.js';
 import managerRoutes from './routes/manager_route.js';
+import loginRoutes from './routes/login_route.js';
+import registerRoutes from './routes/register_route.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -16,13 +18,19 @@ const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-await mongoose.connect('mongodb://127.0.0.1:27017/taskapp');
-console.log('db connected via mongoose');
 
 app.use('/api/users', userRoutes());
 app.use('/api/comments', commentRoutes());
 app.use('/api/test', testRoutes());
 app.use('/api/manager', managerRoutes());
+app.use('/api/register', registerRoutes());
+app.use('/api/login', loginRoutes());
+
+
+await mongoose.connect('mongodb://127.0.0.1:27017/taskapp');
+console.log('db connected via mongoose');
+
+
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'main.html'));

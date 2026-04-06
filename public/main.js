@@ -5,6 +5,7 @@ import { register } from './register.js';
 import {test} from './test.js'
 
 
+
 document.addEventListener('DOMContentLoaded', () => {
   comment.init();
   comment.loadComments();
@@ -12,4 +13,5 @@ document.addEventListener('DOMContentLoaded', () => {
   login.init();
   register.init();
   test.init();
+  
 });

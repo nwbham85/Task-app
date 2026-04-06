@@ -1,23 +1,38 @@
 export const modal = {
   init() {
     const loginBtn = document.querySelector('.login');
-    const modalEl = document.querySelector('.modal');
-    const closeBtn = document.querySelector('.modal-close');
+    const registerBtn = document.querySelector('.register');
 
-    if (!loginBtn || !modalEl || !closeBtn) return;
+    const loginModal = document.querySelectorAll('.modal')[0];
+    const registerModal = document.querySelectorAll('.modal')[1];
 
-    loginBtn.addEventListener('click', () => {
-      modalEl.style.display = 'flex';
+    const closeBtns = document.querySelectorAll('.modal-close');
+
+    // ===== LOGIN =====
+    if (loginBtn && loginModal) {
+      loginBtn.addEventListener('click', () => {
+        loginModal.style.display = 'flex';
+      });
+    }
+
+    // ===== REGISTER =====
+    if (registerBtn && registerModal) {
+      registerBtn.addEventListener('click', () => {
+        registerModal.style.display = 'flex';
+      });
+    }
+
+    // ===== CLOSE BUTTONS =====
+    closeBtns.forEach((btn, index) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.modal')[index].style.display = 'none';
+      });
     });
 
-    closeBtn.addEventListener('click', () => {
-      modalEl.style.display = 'none';
-    });
-
+    // ===== CLICK OUTSIDE =====
     window.addEventListener('click', (e) => {
-      if (e.target === modalEl) {
-        modalEl.style.display = 'none';
-      }
+      if (e.target === loginModal) loginModal.style.display = 'none';
+      if (e.target === registerModal) registerModal.style.display = 'none';
     });
   }
 };

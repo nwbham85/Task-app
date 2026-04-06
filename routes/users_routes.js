@@ -4,7 +4,7 @@ import { getUserByUsername } from '../controllers/userController.js';
 export default function userRoutes() {
   const router = express.Router();
 
-  router.get('/', getUserByUsername());
+  router.get('/', getUserByUsername);
 
   return router;
 }

@@ -26,7 +26,7 @@ export const login = {
       return;
     }
 
-    const res = await fetch(`/users?username=${username}`);
+    const res = await fetch(`/api/users?username=${username}`);
     console.log('status:', res.status);
 
     const data = await res.json();
