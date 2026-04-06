@@ -14,6 +14,10 @@ export const register = {
     const email = emailInput.value.trim();
     const password = passwordInput.value.trim();
 
+    //clear input fields
+    
+    
+
     if (!email || !password) {
       alert('Complete all fields.');
       return;
@@ -38,6 +42,11 @@ export const register = {
       }
 
       alert('Registration successful!');
+
+      //clear input
+      emailInput.value = '';
+      passwordInput.value = '';
+      document.querySelector('.register-modal').style.display = 'none';
 
     } catch (err) {
       console.error('Registration error:', err);
