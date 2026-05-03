@@ -1,0 +1,84 @@
+body {
+    background-color: #0a0a0a; /* Deep black */
+    color: #00ff41;           /* Matrix Green */
+    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.form {
+    border: 1px solid #00ff41;
+    padding: 2rem;
+    background: rgba(0, 40, 0, 0.2);
+    box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
+    max-width: 500px;
+    
+}
+
+h2 {
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    border-bottom: 1px solid #00ff41;
+    padding-bottom: 10px;
+    
+}
+
+ul {
+    list-style: none; /* Removes standard bullets */
+    padding: 0;
+}
+
+li {
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+/* Custom "bullet" points using ASCII characters */
+li::before {
+    content: "> ";
+    color: #00ff41;
+}
+
+input[type="checkbox"] {
+    accent-color: #00ff41; /* Colors the checkbox green */
+    cursor: pointer;
+}
+
+button {
+    background: transparent;
+    color: #00ff41;
+    border: 1px solid #00ff41;
+    padding: 10px 20px;
+    font-family: inherit;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 100%;
+    margin-top: 10px;
+}
+
+button:hover {
+    background: #00ff41;
+    color: #0a0a0a;
+    box-shadow: 0 0 20px #00ff41;
+}
+
+/* Scanline effect overlay */
+body::before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    z-index: 2;
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+}
+
+.success {
+    display:none;
+}
