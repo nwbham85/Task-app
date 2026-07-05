@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <link rel="stylesheet" href="main.css">
+  <link rel="stylesheet" href="modal.css">
 </head>
 
 <style>
@@ -347,5 +348,22 @@
 
 
     <script type="module" src='main.js'></script>
+
+// edit post modal
+<div class="edit-modal hidden">
+  <div class="edit-modal-content">
+    <h3>Edit Post</h3>
+
+    <input class="edit-title-input" type="text" />
+    <textarea class="edit-text-input"></textarea>
+
+    <div class="btn-row">
+      <button class="primary save-edit-btn">Save</button>
+      <button class="secondary cancel-edit-btn">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
 </body>
 </html>
