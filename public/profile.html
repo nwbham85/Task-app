@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile Dashboard</title>
+  <link rel="stylesheet" href="profile.css">
+  <style>
+    
+  </style>
+</head>
+<body>
+
+  <!-- Header & Theme Controller -->
+  <header>
+    <h2>Dashboard</h2>
+    <button class="theme-toggle-btn" id="themeToggle" onclick="toggleDarkMode()">🌙 Mode</button>
+  </header>
+
+  <!-- Main Workspace Grid -->
+  <main class="dashboard-container">
+
+    <!-- Card 1: Profile & Upload Avatar -->
+    <section class="card profile-card">
+      <h3 class="card-title" style="align-self: flex-start;">My Profile</h3>
+      <div class="avatar-wrapper">
+        <img id="avatarDisplay" class="profile-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&h=150&q=80" alt="Avatar">
+        <label for="avatarUpload" class="upload-label">📷</label>
+        <input type="file" id="avatarUpload" class="file-input" accept="image/*" onchange="previewAvatar(event)">
+      </div>
+      <h4>Alex Mercer</h4>
+      <p style="color: var(--text-muted); font-size: 0.85rem;">Full-Stack Engineer</p>
+
+      <div class="user-details">
+        <p><strong>Email:</strong> alex.mercer@dev.io</p>
+        <p><strong>Location:</strong> Austin, TX</p>
+      </div>
+    </section>
+
+    <!-- Card 2: Send & Receive Messages -->
+    <section class="card chat-card">
+      <h3 class="card-title">Direct Messages</h3>
+      <div class="chat-history" id="chatHistory">
+        <!-- Initial Received Message -->
+        <div class="message received">
+          <div class="msg-bubble">Hey, did you finish writing the core CSS styles?</div>
+          <div class="msg-meta">Sarah • 4:32 PM</div>
+        </div>
+      </div>
+      <div class="chat-input-area">
+        <input type="text" id="messageInput" class="text-input" placeholder="Type a message..." onkeypress="handleKeyPress(event)">
+        <button class="send-btn" onclick="sendMessage()">Send</button>
+      </div>
+    </section>
+
+    <!-- Card 3: Who's Online -->
+    <section class="card">
+      <h3 class="card-title">Online Peers</h3>
+      <ul class="roster-list">
+        <li class="user-item">
+          <div class="user-info">
+            <div class="roster-avatar-container">
+              <img class="roster-avatar" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=40&h=40&q=80" alt="">
+              <div class="status-dot"></div>
+            </div>
+            <div>
+              <div class="username">Sarah Jenkins</div>
+              <div class="user-role">UI Designer</div>
+            </div>
+          </div>
+        </li>
+        <li class="user-item" style="margin-top: 1rem;">
+          <div class="user-info">
+            <div class="roster-avatar-container">
+              <img class="roster-avatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=40&h=40&q=80" alt="">
+              <div class="status-dot"></div>
+            </div>
+            <div>
+              <div class="username">Marcus Chen</div>
+              <div class="user-role">DevOps Engineer</div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+  </main>
+
+  <!-- Lightweight Feature Interactivity -->
+  <script>
+    // 1. Toggle Dark Mode
+    function toggleDarkMode() {
+      const isDark = document.body.classList.toggle('dark-mode');
+      const btn = document.getElementById('themeToggle');
+      btn.innerText = isDark ? '☀️ Light' : '🌙 Dark';
+    }
+
+    // 2. Avatar Photo Upload Stream
+    function previewAvatar(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('avatarDisplay').src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // 3. Send Messages Dom Construction
+    function sendMessage() {
+      const input = document.getElementById('messageInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const chatHistory = document.getElementById('chatHistory');
+      const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      // Build out message block structure
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'message sent';
+      msgDiv.innerHTML = `
+        <div class="msg-bubble">${escapeHtml(text)}</div>
+        <div class="msg-meta">You • ${currentTime}</div>
+      `;
+
+      chatHistory.appendChild(msgDiv);
+      input.value = '';
+      chatHistory.scrollTop = chatHistory.scrollHeight; // Auto-scroll to latest
+    }
+
+    function handleKeyPress(event) {
+      if (event.key === 'Enter') {
+        sendMessage();
+      }
+    }
+
+    // XSS Sanitizer Utility
+    function escapeHtml(string) {
+      return string.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+  </script>
+</body>
+</html>

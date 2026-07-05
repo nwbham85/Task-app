@@ -1,0 +1,298 @@
+/* --- Design Tokens & Variables --- */
+    :root {
+      --bg-main: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-input: #f1f5f9;
+      --border-color: #e2e8f0;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --accent-color: #4f46e5;
+      --accent-hover: #4338ca;
+      --online-indicator: #22c55e;
+    }
+
+    body.dark-mode {
+      --bg-main: #0f172a;
+      --bg-card: #1e293b;
+      --bg-input: #0f172a;
+      --border-color: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    /* --- Base Layout --- */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      transition: background-color 0.3s ease, color 0.3s ease;
+      min-height: 100vh;
+    }
+
+    /* --- Header / Navigation --- */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background-color: var(--bg-card);
+      border-b: 1px solid var(--border-color);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .theme-toggle-btn {
+      background: var(--bg-input);
+      border: none;
+      color: var(--text-main);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    .theme-toggle-btn:hover {
+      opacity: 0.9;
+    }
+
+    /* --- Dashboard Grid Grid Layout --- */
+    .dashboard-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .dashboard-container {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .dashboard-container {
+        grid-template-columns: 1fr 1.25fr 0.75fr;
+      }
+    }
+
+    .card {
+      background-color: var(--bg-card);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+      border: 1px solid var(--border-color);
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+    }
+
+    /* --- Section 1: Profile & Avatar Upload --- */
+    .profile-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin-bottom: 1rem;
+    }
+
+    .profile-avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--accent-color);
+    }
+
+    .upload-label {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      background-color: var(--accent-color);
+      color: white;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.9rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .upload-label:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .user-details {
+      width: 100%;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    .user-details p {
+      margin-bottom: 0.5rem;
+    }
+
+    /* --- Section 2: Messaging System --- */
+    .chat-card {
+      display: flex;
+      flex-direction: column;
+      height: 450px;
+    }
+
+    .chat-history {
+      flex: 1;
+      overflow-y: auto;
+      background-color: var(--bg-main);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .message {
+      margin-bottom: 1rem;
+      max-width: 80%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .message.sent {
+      margin-left: auto;
+      align-items: flex-end;
+    }
+
+    .message.received {
+      margin-right: auto;
+      align-items: flex-start;
+    }
+
+    .msg-bubble {
+      padding: 0.6rem 1rem;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .sent .msg-bubble {
+      background-color: var(--accent-color);
+      color: white;
+      border-top-right-radius: 0;
+    }
+
+    .received .msg-bubble {
+      background-color: var(--border-color);
+      color: var(--text-main);
+      border-top-left-radius: 0;
+    }
+
+    .msg-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .chat-input-area {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .text-input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-input);
+      color: var(--text-main);
+      font-size: 0.9rem;
+    }
+
+    .text-input:focus {
+      outline: 2px solid var(--accent-color);
+    }
+
+    .send-btn {
+      background-color: var(--accent-color);
+      color: white;
+      border: none;
+      padding: 0 1.25rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    /* --- Section 3: Online Status Roster --- */
+    .roster-list {
+      list-style: none;
+    }
+
+    .user-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .roster-avatar-container {
+      position: relative;
+      width: 40px;
+      height: 40px;
+    }
+
+    .roster-avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .status-dot {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 10px;
+      height: 10px;
+      background-color: var(--online-indicator);
+      border: 2px solid var(--bg-card);
+      border-radius: 50%;
+    }
+
+    .username {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .user-role {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
