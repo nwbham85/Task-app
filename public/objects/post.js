@@ -1,3 +1,10 @@
+import storage from '../objects/storage.js';
+
+
+// init storage object
+const db = storage();
+
+
 export function post(title, text) {
     return {
         postId: null,
@@ -58,6 +65,9 @@ export function post(title, text) {
             this.text = cleanedText;
 
             return true;
+        },
+        deletePost() {
+           return true; 
         }
     };
 }
@@ -80,6 +90,12 @@ export function createNewPost({
 
     renderPost(newPost, postList);
     clearPostForm(postTitleInput, postTextInput);
+
+    //save to storage
+    db.savePost(allPosts);
+        //verify the save worked
+        console.log('current saved database', db.getPost());
+
 }
 
 export function clearPostForm(postTitleInput, postTextInput) {
@@ -110,7 +126,7 @@ export function renderPost(newPost, postList) {
         <div class="btn-row">
             <button class="secondary edit-post-btn">Edit</button>
             <button class="primary">Share</button>
-            <button class="danger">Delete</button>
+            <button class="danger delete-post-btn">Delete</button>
         </div>
 
         <div class="comments">

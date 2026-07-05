@@ -1,7 +1,9 @@
-import {createNewPost} from './objects/post.js';
+import {createNewPost, post, renderPost} from './objects/post.js';
 import comment from './objects/comment.js';
+import storage from './objects/storage.js';
 
 const allPosts = [];
+const db = storage();
 
 const editModal = document.querySelector('.edit-modal');
 const editTitleInput = document.querySelector('.edit-title-input');
@@ -16,6 +18,22 @@ const postTitleInput = document.querySelector('.title');
 const postTextInput = document.querySelector('.text');
 const createBtn = document.querySelector('.create-post .primary');
 const postList = document.querySelector('.post-list');
+
+const savedPosts = db.getPost();
+
+savedPosts.forEach(savedPost => {
+    const restoredPost = post(savedPost.title, savedPost.text);
+
+    restoredPost.postId = savedPost.postId;
+    restoredPost.comments = savedPost.comments || [];
+
+    allPosts.push(restoredPost);
+    renderPost(restoredPost, postList);
+
+    const postCard = postList.querySelector(`[data-id="${restoredPost.postId}"]`);
+    const commentList = postCard.querySelector('.comment-list');
+    renderComments(restoredPost, commentList);
+});
 
 createBtn.addEventListener('click', () => {
     createNewPost({
@@ -55,6 +73,8 @@ function handlePostActions(event) {
 
         targetPostObj.addComment(newComment);
         renderComments(targetPostObj, commentList);
+
+        db.savePost(allPosts);
 
         commentInput.value = '';
     }
@@ -101,7 +121,28 @@ function handlePostActions(event) {
         editModal.classList.remove('hidden');
     }
 
-    saveEditBtn.addEventListener('click', () => {
+    if (event.target.classList.contains('delete-post-btn')) {
+    const wasDeleted = targetPostObj.deletePost();
+
+    if (!wasDeleted) return;
+
+    const postIndex = allPosts.findIndex(post => {
+        return post.postId === targetId;
+    });
+
+    if (postIndex === -1) return;
+
+    allPosts.splice(postIndex, 1);
+
+    postCard.remove();
+
+    db.savePost(allPosts);
+    }
+    
+}
+
+
+saveEditBtn.addEventListener('click', () => {
     if (!postBeingEdited || !postCardBeingEdited) return;
 
     const wasEdited = postBeingEdited.editPost(
@@ -117,6 +158,8 @@ function handlePostActions(event) {
     titleElement.textContent = postBeingEdited.title;
     textElement.textContent = postBeingEdited.text;
 
+    db.savePost(allPosts);
+
     closeEditModal();
 });
 
@@ -126,7 +169,6 @@ function closeEditModal() {
     editModal.classList.add('hidden');
     postBeingEdited = null;
     postCardBeingEdited = null;
-}
 }
 
 function renderComments(postObj, commentList) {
