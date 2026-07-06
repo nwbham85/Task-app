@@ -1,169 +1,140 @@
-import {createNewPost, post, renderPost} from './objects/post.js';
-import comment from './objects/comment.js';
+import { createNewPost, post, renderPost } from './objects/post.js';
+import createComment from './objects/comment.js';
 import storage from './objects/storage.js';
 
 const allPosts = [];
 const db = storage();
 
+// DOM refs
 const editModal = document.querySelector('.edit-modal');
 const editTitleInput = document.querySelector('.edit-title-input');
 const editTextInput = document.querySelector('.edit-text-input');
 const saveEditBtn = document.querySelector('.save-edit-btn');
 const cancelEditBtn = document.querySelector('.cancel-edit-btn');
 
-let postBeingEdited = null;
-let postCardBeingEdited = null;
-
 const postTitleInput = document.querySelector('.title');
 const postTextInput = document.querySelector('.text');
 const createBtn = document.querySelector('.create-post .primary');
 const postList = document.querySelector('.post-list');
 
-const savedPosts = db.getPost();
+let postBeingEdited = null;
+let postCardBeingEdited = null;
 
-savedPosts.forEach(savedPost => {
+init();
+
+function init() {
+    db.getPost().forEach(restorePost);
+
+    createBtn.addEventListener('click', () => {
+        createNewPost({ postTitleInput, postTextInput, postList, allPosts });
+    });
+
+    postList.addEventListener('click', handlePostActions);
+    saveEditBtn.addEventListener('click', handleSaveEdit);
+    cancelEditBtn.addEventListener('click', closeEditModal);
+}
+
+function restorePost(savedPost) {
     const restoredPost = post(savedPost.title, savedPost.text);
-
     restoredPost.postId = savedPost.postId;
     restoredPost.comments = savedPost.comments || [];
 
     allPosts.push(restoredPost);
     renderPost(restoredPost, postList);
+    renderComments(restoredPost, getCommentList(restoredPost.postId));
+}
 
-    const postCard = postList.querySelector(`[data-id="${restoredPost.postId}"]`);
-    const commentList = postCard.querySelector('.comment-list');
-    renderComments(restoredPost, commentList);
-});
+// --- Click delegation -----------------------------------------------------
 
-createBtn.addEventListener('click', () => {
-    createNewPost({
-        postTitleInput,
-        postTextInput,
-        postList,
-        allPosts
-    });
-});
-
-postList.addEventListener('click', handlePostActions);
+const actionHandlers = {
+    'flag-btn': handleFlag,
+    'comment-btn': handleAddComment,
+    'edit-comment-btn': handleEditComment,
+    'edit-post-btn': handleEditPostClick,
+    'delete-post-btn': handleDeletePost
+};
 
 function handlePostActions(event) {
     const postCard = event.target.closest('.post');
-
     if (!postCard) return;
 
-    const targetId = Number(postCard.dataset.id);
+    const targetPost = findPost(Number(postCard.dataset.id));
+    if (!targetPost) return;
 
-    const targetPostObj = allPosts.find(post => {
-        return post.postId === targetId;
-    });
-
-    if (!targetPostObj) return;
-
-    if (event.target.classList.contains('flag-btn')) {
-        targetPostObj.flagPost();
+    for (const [className, handler] of Object.entries(actionHandlers)) {
+        if (event.target.classList.contains(className)) {
+            handler(event, targetPost, postCard);
+            return;
+        }
     }
+}
 
-    if (event.target.classList.contains('comment-btn')) {
-        const commentInput = postCard.querySelector('.comment-input');
-        const commentList = postCard.querySelector('.comment-list');
+function handleFlag(event, targetPost) {
+    targetPost.flagPost();
+}
 
-        const newComment = comment(commentInput.value);
+function handleAddComment(event, targetPost, postCard) {
+    const commentInput = postCard.querySelector('.comment-input');
+    const newComment = createComment(commentInput.value);
 
-        if (!newComment.validateComment()) return;
+    if (!newComment.validateComment()) return;
 
-        targetPostObj.addComment(newComment);
-        renderComments(targetPostObj, commentList);
+    targetPost.addComment(newComment);
+    renderComments(targetPost, getCommentList(postCard));
 
-        db.savePost(allPosts);
+    db.savePost(allPosts);
+    commentInput.value = '';
+}
 
-        commentInput.value = '';
-    }
+function handleEditComment(event, targetPost, postCard) {
+    const commentCard = event.target.closest('.comment');
+    const commentId = Number(commentCard.dataset.id);
 
-    if (event.target.classList.contains('edit-comment-btn')) {
-        const commentCard =
-        event.target.closest('.comment');
+    const targetComment = targetPost.comments.find(c => c.commentId === commentId);
+    if (!targetComment) return;
 
-        const commentId =
-        Number(commentCard.dataset.id);
+    const newText = prompt('Enter your new comment:', targetComment.text);
+    if (!newText) return;
 
-        const targetComment =
-        targetPostObj.comments.find(comment => {
-            return comment.commentId === commentId;
-        });
+    targetComment.editComment(newText);
+    renderComments(targetPost, getCommentList(postCard));
+}
 
-        if (!targetComment) return;
+function handleEditPostClick(event, targetPost, postCard) {
+    postBeingEdited = targetPost;
+    postCardBeingEdited = postCard;
 
-        const newText = prompt(
-        'Enter your new comment:',
-        targetComment.text
-        );
+    editTitleInput.value = targetPost.title;
+    editTextInput.value = targetPost.text;
 
-        if (!newText) return;
+    editModal.classList.remove('hidden');
+}
 
-        targetComment.editComment(newText);
+function handleDeletePost(event, targetPost, postCard) {
+    if (!targetPost.deletePost()) return;
 
-        const commentList =
-        postCard.querySelector('.comment-list');
-
-        renderComments(
-        targetPostObj,
-        commentList
-        );
-    }
-
-    if (event.target.classList.contains('edit-post-btn')) {
-        postBeingEdited = targetPostObj;
-        postCardBeingEdited = postCard;
-
-        editTitleInput.value = targetPostObj.title;
-        editTextInput.value = targetPostObj.text;
-
-        editModal.classList.remove('hidden');
-    }
-
-    if (event.target.classList.contains('delete-post-btn')) {
-    const wasDeleted = targetPostObj.deletePost();
-
-    if (!wasDeleted) return;
-
-    const postIndex = allPosts.findIndex(post => {
-        return post.postId === targetId;
-    });
-
+    const postIndex = allPosts.findIndex(p => p.postId === targetPost.postId);
     if (postIndex === -1) return;
 
     allPosts.splice(postIndex, 1);
-
     postCard.remove();
-
     db.savePost(allPosts);
-    }
-    
 }
 
+// --- Edit modal -------------------------------------------------------------
 
-saveEditBtn.addEventListener('click', () => {
+function handleSaveEdit() {
     if (!postBeingEdited || !postCardBeingEdited) return;
 
-    const wasEdited = postBeingEdited.editPost(
-        editTitleInput.value,
-        editTextInput.value
-    );
-
+    const wasEdited = postBeingEdited.editPost(editTitleInput.value, editTextInput.value);
     if (!wasEdited) return;
 
-    const titleElement = postCardBeingEdited.querySelector('h3');
-    const textElement = postCardBeingEdited.querySelector('.post-content');
-
-    titleElement.textContent = postBeingEdited.title;
-    textElement.textContent = postBeingEdited.text;
+    postCardBeingEdited.querySelector('h3').textContent = postBeingEdited.title;
+    postCardBeingEdited.querySelector('.post-content').textContent = postBeingEdited.text;
 
     db.savePost(allPosts);
-
     closeEditModal();
-});
-
-cancelEditBtn.addEventListener('click', closeEditModal);
+}
 
 function closeEditModal() {
     editModal.classList.add('hidden');
@@ -171,27 +142,33 @@ function closeEditModal() {
     postCardBeingEdited = null;
 }
 
+// --- Helpers ----------------------------------------------------------------
+
+function findPost(postId) {
+    return allPosts.find(p => p.postId === postId);
+}
+
+function getCommentList(postCardOrId) {
+    const postCard = postCardOrId instanceof Element
+        ? postCardOrId
+        : postList.querySelector(`[data-id="${postCardOrId}"]`);
+
+    return postCard.querySelector('.comment-list');
+}
+
 function renderComments(postObj, commentList) {
     commentList.innerHTML = '';
 
     postObj.comments.forEach(comment => {
         const commentDiv = document.createElement('div');
-
         commentDiv.classList.add('comment');
         commentDiv.dataset.id = comment.commentId;
 
         commentDiv.innerHTML = `
             <strong>${comment.author}</strong>
-
-            <p class="comment-text">
-                ${comment.text}
-            </p>
-
+            <p class="comment-text">${comment.text}</p>
             <small>${comment.createdAt}</small>
-
-            <button class="edit-comment-btn">
-                Edit
-            </button>
+            <button class="edit-comment-btn">Edit</button>
         `;
 
         commentList.appendChild(commentDiv);
