@@ -1,1 +1,3 @@
 comments are not saving when edited.
+
+moderator.js is not detecting badword
