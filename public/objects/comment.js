@@ -38,6 +38,19 @@ export function comment(text, author = 'nate') {
 
             return this;
 
+        },
+        deleteComment(post) {
+            const commentIndex = post.comments.findIndex(
+                comment => comment.commentId === this.commentId
+            );
+
+            if(commentIndex === -1) {
+                console.log('comment not found.');
+                return false;
+            }
+            
+            post.comments.splice(commentIndex,1);
+            return true;
         }
     };
 }

@@ -1,7 +1,9 @@
 import { createNewPost, post, renderPost } from './objects/post.js';
 import createComment from './objects/comment.js';
 import storage from './objects/storage.js';
+import user from './objects/user.js';
 import moderator from './objects/moderator.js';
+
 
 const allPosts = [];
 const db = storage();
@@ -23,26 +25,54 @@ let postCardBeingEdited = null;
 
 init();
 
-function init() {
-    db.getPost().forEach(restorePost);
-
-    createBtn.addEventListener('click', () => {
-        createNewPost({ postTitleInput, postTextInput, postList, allPosts });
-    });
-
-    postList.addEventListener('click', handlePostActions);
-    saveEditBtn.addEventListener('click', handleSaveEdit);
-    cancelEditBtn.addEventListener('click', closeEditModal);
-}
-
 function restorePost(savedPost) {
     const restoredPost = post(savedPost.title, savedPost.text);
+
     restoredPost.postId = savedPost.postId;
-    restoredPost.comments = savedPost.comments || [];
+
+    savedPost.comments.forEach(savedComment => {
+        const restoredComment = createComment(savedComment.text, savedComment.author);
+
+        restoredComment.commentId = savedComment.commentId;
+        restoredComment.date = savedComment.date;
+        restoredComment.editedAt = savedComment.editedAt;
+
+        restoredPost.addComment(restoredComment);
+    });
 
     allPosts.push(restoredPost);
     renderPost(restoredPost, postList);
     renderComments(restoredPost, getCommentList(restoredPost.postId));
+}
+
+function init() {
+
+    db.getPost().forEach(restorePost);
+
+    createBtn.addEventListener('click', () => {
+    const result = moderator(postTextInput.value);
+
+    if (result.banned) {
+        console.log('User is banned.');
+        return;
+    }
+
+    if (!result.approved) {
+        console.log(`Post rejected.`);
+        return;
+    }
+
+    createNewPost({
+        postTitleInput,
+        postTextInput,
+        postList,
+        allPosts
+    });
+});
+
+    postList.addEventListener('click', handlePostActions);
+    saveEditBtn.addEventListener('click', handleSaveEdit);
+    cancelEditBtn.addEventListener('click', closeEditModal);
 }
 
 // --- Click delegation -----------------------------------------------------
@@ -51,6 +81,7 @@ const actionHandlers = {
     'flag-btn': handleFlag,
     'comment-btn': handleAddComment,
     'edit-comment-btn': handleEditComment,
+    'delete-comment-btn': handleDeleteComment,
     'edit-post-btn': handleEditPostClick,
     'delete-post-btn': handleDeletePost
 };
@@ -99,6 +130,23 @@ function handleEditComment(event, targetPost, postCard) {
 
     targetComment.editComment(newText);
     renderComments(targetPost, getCommentList(postCard));
+}
+
+function handleDeleteComment(event, targetPost, postCard) {
+
+    const commentCard = event.target.closest('.comment');
+    const commentId = Number(commentCard.dataset.id);
+
+    const targetComment = targetPost.comments.find(
+        comment => comment.commentId === commentId
+    );
+
+    if (!targetComment) return;
+
+    if (!targetComment.deleteComment(targetPost)) return;
+
+    renderComments(targetPost, getCommentList(postCard));
+    db.savePost(allPosts);
 }
 
 function handleEditPostClick(event, targetPost, postCard) {
@@ -170,8 +218,10 @@ function renderComments(postObj, commentList) {
             <p class="comment-text">${comment.text}</p>
             <small>${comment.createdAt}</small>
             <button class="edit-comment-btn">Edit</button>
+            <button class="delete-comment-btn">Delete</button>
         `;
 
         commentList.appendChild(commentDiv);
     });
 }
+

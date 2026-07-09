@@ -1,61 +1,39 @@
-export function moderator(post) {
-    let badWords = ['badword'];
-    let banned = false;
-    console.log('moderator.js loaded');
-    // Look in localStorage first. If there's nothing there, start with an empty array []
-    let strikes = JSON.parse(localStorage.getItem('strikes')) || [];
-    
-    // Select HTML elements (Matching the IDs from the previous HTML template)
-    post = document.querySelector('.Text'); 
-    let submit = document.querySelector('.primary');
-    
+import { createUser } from '../objects/user.js';
 
-    submit.addEventListener('click', () => {
-        // check to see if user is banned
-        if (banned) {
-            console.log(user, 'is banned.');
-        }
-        
-        // Grab the current text values from the inputs at the exact moment of the click
-        let currentPostText = post.value;
-        
+const currentUser = createUser('Nathan', 'Winslow', 'nwinslow');
 
-        // Reset total strikes to 0 right before counting so the loop math stays accurate
-        let totalStrikes = 0; 
+export function moderator(postText) {
+    const badWords = ['badword', 'badword2'];
 
-        if (currentPostText.includes(badWords)) {
-            console.log(`those words are not allowed.`);
-            
-            // Add a new strike to our array
-            strikes.push(1);
-            
-            // Loop through ALL strikes
-            for (let i = 0; i < strikes.length; i++) {
-                totalStrikes = totalStrikes + strikes[i];
-            }
+    if (currentUser.isBanned) {
+        console.log('Post denied - user banned.');
+        return {
+            approved: false,
+            banned: true,
+            user: currentUser
+        };
+    }
 
-            console.log(`Total strikes: ${totalStrikes}`);
+    const hasBadWord = badWords.some(word =>
+        postText.toLowerCase().includes(word.trim().toLowerCase())
+    );
 
-            // Save the updated array back to localStorage
-            localStorage.setItem('strikes', JSON.stringify(strikes));
+    if (hasBadWord) {
+        currentUser.strikes += 1;
+        console.log(`${currentUser.username} has received a strike.`);
 
-            // Ban the user if they hit 3 strikes
-            if (totalStrikes > 2) {
-                console.log(`user has been banned!`);
-                banned = true;
-                return;
-            }
-        } else {
-            console.log("Post approved! No bad words found.");
-        }
+        return {
+            approved: false,
+            banned: false,
+            user: currentUser
+        };
+    }
 
-        if(currentPostText === 'clear') {
-            localStorage.clear();
-            strikes = [];
-            console.log('storage cleared');
-            return;
-        }
-    });
+    return {
+        approved: true,
+        banned: false,
+        user: currentUser
+    };
 }
 
 export default moderator;
