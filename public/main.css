@@ -246,7 +246,6 @@
       }
     }
 
-    .btn-red {
-      
-      border:2px solid red;
+    .deleteList.hidden {
+        display:none;
     }

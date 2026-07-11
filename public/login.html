@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern Login</title>
+  <link rel="stylesheet" href="login.css">
+</head>
+<body>
+
+  <div class="login-container">
+    <!-- Back Button linked to index.html -->
+    <a href="index.html" class="back-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      Back to Home
+    </a>
+
+    <h2>Welcome Back</h2>
+    <p class="subtitle">Please enter your details to sign in.</p>
+
+    <form id="loginForm" novalidate>
+      <!-- Email Input -->
+      <div class="input-group" id="emailGroup">
+        <input type="email" id="email" placeholder=" " required autocomplete="username">
+        <label for="email">Email Address</label>
+        <div class="error-txt" id="emailError">Please enter a valid email address</div>
+      </div>
+
+      <!-- Password Input -->
+      <div class="input-group" id="passwordGroup">
+        <input type="password" id="password" placeholder=" " required autocomplete="current-password">
+        <label for="password">Password</label>
+        <button type="button" class="toggle-password" id="togglePassword">Show</button>
+        <div class="error-txt" id="passwordError">Password must be at least 6 characters</div>
+      </div>
+
+      <!-- Remember & Forgot -->
+      <div class="form-options">
+        <label class="remember-me">
+          <input type="checkbox" id="remember"> Remember me
+        </label>
+        <a href="#" class="forgot-pass">Forgot password?</a>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="submit-btn">Sign In</button>
+    </form>
+    <p class="create-account">Create Account</p>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const togglePasswordBtn = document.getElementById('togglePassword');
+
+    // Toggle Password Visibility
+    togglePasswordBtn.addEventListener('click', () => {
+      const isPassword = passwordInput.getAttribute('type') === 'password';
+      passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+      togglePasswordBtn.textContent = isPassword ? 'Hide' : 'Show';
+    });
+
+    // Simple Helper to Show/Hide Errors
+    function toggleError(groupEl, errorEl, show) {
+      if (show) {
+        groupEl.classList.add('error');
+        errorEl.style.display = 'block';
+      } else {
+        groupEl.classList.remove('error');
+        errorEl.style.display = 'none';
+      }
+    }
+
+    // Form Submission Handler
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const emailGroup = document.getElementById('emailGroup');
+      const emailError = document.getElementById('emailError');
+      const passwordGroup = document.getElementById('passwordGroup');
+      const passwordError = document.getElementById('passwordError');
+
+      let isValid = true;
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(emailInput.value.trim())) {
+        toggleError(emailGroup, emailError, true);
+        isValid = false;
+      } else {
+        toggleError(emailGroup, emailError, false);
+      }
+
+      if (passwordInput.value.length < 6) {
+        toggleError(passwordGroup, passwordError, true);
+        isValid = false;
+      } else {
+        toggleError(passwordGroup, passwordError, false);
+      }
+
+      if (isValid) {
+        alert('Logging in...');
+      }
+    });
+
+    // Clear errors inline when user types
+    emailInput.addEventListener('input', () => {
+      toggleError(document.getElementById('emailGroup'), document.getElementById('emailError'), false);
+    });
+
+    passwordInput.addEventListener('input', () => {
+      toggleError(document.getElementById('passwordGroup'), document.getElementById('passwordError'), false);
+    });
+  </script>
+</body>
+</html>
