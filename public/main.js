@@ -225,3 +225,16 @@ function renderComments(postObj, commentList) {
     });
 }
 
+//
+const btnDiv = document.querySelector('.btnDiv');
+const btn1 = document.querySelector('.btn1');
+
+btnDiv.addEventListener('click', e => {
+    if(e.target.classList.contains('btn1')) {
+        console.log('button 1 clicked');
+        btn1.classList.toggle('btn-red');
+    } else {
+        console.log('btn2 clicked.');
+    }
+})
+
