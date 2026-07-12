@@ -7,9 +7,10 @@ import {connectDB} from './config/db.js';
 import posts from './routes/posts.js';
 import home from './routes/home.js';
 import user from './routes/user.js';
+import loginRoutes from './routes/login_route.js';
 
 dotenv.config({path: './config/config.env'});
-console.log(process.env.MONGO_URI);
+console.log('enviroment variables loaded');
 
 // connect to db
 connectDB();
@@ -22,12 +23,13 @@ const __dirname = path.dirname(__filename);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // mounts
 app.use('/api/v1/posts', posts);
-app.use('/', home);
 app.use('/api/v1/user', user);
+app.use(loginRoutes);
+app.use('/', home);
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);

@@ -76,7 +76,7 @@
     }
 
     // Form Submission Handler
-    loginForm.addEventListener('submit', (e) => {
+    loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const emailGroup = document.getElementById('emailGroup');
@@ -102,7 +102,19 @@
       }
 
       if (isValid) {
-        alert('Logging in...');
+        const response = await fetch('./login', {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: emailInput.value.trim(),
+                password: passwordInput.value
+            })
+        });
+
+        const data = await response.json();
+        console.log(data);
       }
     });
 
