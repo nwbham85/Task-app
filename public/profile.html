@@ -21,7 +21,31 @@
     <!-- Card 1: Profile & Upload Avatar -->
     <section class="card profile-card">
       <h3 class="card-title" style="align-self: flex-start;">My Profile</h3>
-      <h3 class="edit-profile">...</h3>
+      
+      <div class="edit-profile-dropdown">
+        <button class="edit-profile">
+          Edit Profile
+          <span class="dropdown-arrow">▼</span>
+        </button>
+
+        <div class="edit-profile-menu">
+          <button class="dropdown-item" data-action="picture">
+              Change Profile Picture
+          </button>
+
+          <button class="dropdown-item" data-action="name">
+              Edit Name
+          </button>
+
+          <button class="dropdown-item" data-action="bio">
+              Edit Bio
+          </button>
+
+          <button class="dropdown-item" data-action="settings">
+              Account Settings
+          </button>
+        </div>
+      </div>
 
       <div class="avatar-wrapper">
         <img id="avatarDisplay" class="profile-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&h=150&q=80" alt="Avatar">
@@ -162,6 +186,23 @@
     function escapeHtml(string) {
       return string.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
+
+    // edit profile
+    const editProfileBtn = document.querySelector('.edit-profile');
+    const editProfileMenu = document.querySelector('.edit-profile-menu');
+
+    editProfileBtn.addEventListener('click', (event) => {
+    event.stopPropagation();
+
+    editProfileMenu.classList.toggle('show');
+    });
+
+    document.addEventListener('click', () => {
+    editProfileMenu.classList.remove('show');
+    });
+
+
+
   </script>
   <script type="module" src="./objects/user.js"></script>
 </body>
