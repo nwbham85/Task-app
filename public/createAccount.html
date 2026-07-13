@@ -21,9 +21,9 @@
         </div>
 
         <form class="form">
-            <input name ="email" type="email" required placeholder="email">
-            <input name="userName "type="text" required placeholder="username">
-            <input name="password" type="password" required placeholder="choose password">
+            <input name ="email" class="email" type="email" required placeholder="email">
+            <input name="userName" class="userName" type="text" required placeholder="username">
+            <input name="password" class="password" type="password" required placeholder="choose password">
 
             <button type="submit" class="submit-btn">Create Account</button>
 
@@ -35,6 +35,19 @@
 
 
     </section>
+<script>
+    // select html element inputs
+    const email = document.querySelector('.email');
+    const userName = document.querySelector('.userName');
+    const password = document.querySelector('.password');
+    const submitBtn = document.querySelector('.submit-btn');
+
+    submitBtn.addEventListener('click', () => {
+        validate();
+    })
+</script>
+
+
 <script type="module" src='../middleware/createAccount.js'></script>
 </body>
 </html>
