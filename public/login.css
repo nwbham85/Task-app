@@ -195,12 +195,4 @@
       transform: scale(0.98);
     }
 
-    .create-account {
-        padding:10px;
-        text-align: center;
-    }
-
-    .create-account:hover {
-        color:coral;
-        cursor: pointer;
-    }
+    

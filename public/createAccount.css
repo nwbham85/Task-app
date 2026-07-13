@@ -1,0 +1,43 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 20px;
+    }
+
+.back-btn{
+    color:grey;
+    margin-bottom: 20px;
+}
+    
+.container {
+    border: 1px solid black;
+    border-radius: 5px;
+    width:100%;
+    max-width: 400px;
+    background-color: white;
+    padding:20px;
+}
+
+.form {
+    display:flex;
+    flex-direction: column;
+    
+}
+
+.form input {
+    margin:10px;
+    padding:10px;
+}
+
+.submit-btn {
+    cursor: pointer;
+}
