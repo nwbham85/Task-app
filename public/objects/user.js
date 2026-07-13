@@ -9,3 +9,7 @@ export function createUser(firstName, lastName, username) {
 }
 
 export default createUser;
+
+function updateProfile(name, title, email,location) {
+    
+}
