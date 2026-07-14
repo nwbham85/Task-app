@@ -1,8 +1,8 @@
-import { createNewPost, post, renderPost } from './objects/post.js';
-import createComment from './objects/comment.js';
-import storage from './objects/storage.js';
-import user from './objects/user.js';
-import moderator from './objects/moderator.js';
+import { createNewPost, post, renderPost } from '../objects/post.js';
+import createComment from '../objects/comment.js';
+import storage from '../objects/storage.js';
+import user from '../objects/user.js';
+import moderator from '../objects/moderator.js';
 
 
 const allPosts = [];

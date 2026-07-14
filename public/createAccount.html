@@ -43,7 +43,9 @@
     const submitBtn = document.querySelector('.submit-btn');
 
     submitBtn.addEventListener('click', () => {
-        validate();
+        let isValidated = validate(email,userName,password);
+        console.log(isValidated);
+        
     })
 </script>
 

@@ -17,6 +17,10 @@ export function validate(email,username,password){
         return false;
     }
 
+    return {
+        message: 'validation successful'
+    }
+
 }
 
 export default validate;
