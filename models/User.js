@@ -10,18 +10,25 @@ const userSchema = new mongoose.Schema({
         trim: true,
         maxlength: [25, 'cannot be over 25']
         },
+    password: {
+        type: String,
+        required: true,
+        maxlength: [200, 'password too long']
+    },
     email: {
         type: String,
         required:true,
-        Unique:true,
+        unique:true,
         trim:true,
         maxlength: [50, 'cannot be over 50 characters.']
     },
     role: {
+        type: String,
         default: 'user'
     },
     isBanned: {
-        type: Boolean
+        type: Boolean,
+        default: false
     },
     date: {
         type: Date,
