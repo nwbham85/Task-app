@@ -3,9 +3,10 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
 
-    firstName: {   
+    userName: {   
         type: String,
         required: true,
+        unique: true,
         trim: true,
         maxlength: [25, 'cannot be over 25']
         },
