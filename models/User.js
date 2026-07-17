@@ -16,6 +16,12 @@ const userSchema = new mongoose.Schema({
         trim:true,
         maxlength: [50, 'cannot be over 50 characters.']
     },
+    role: {
+        default: 'user'
+    },
+    isBanned: {
+        type: Boolean
+    },
     date: {
         type: Date,
         default: Date.now
