@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Create an account for the Task App.">
+    <title>Create Account | Task App</title>
+
+    <style>
+        :root {
+            --background: #f3f7fb;
+            --surface: #ffffff;
+            --surface-muted: #f7f9fc;
+            --text: #172033;
+            --text-muted: #667085;
+            --border: #d9e1ec;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #dbeafe;
+            --success: #15803d;
+            --success-background: #dcfce7;
+            --danger: #b42318;
+            --danger-background: #fee4e2;
+            --focus-ring: rgba(37, 99, 235, 0.2);
+            --shadow: 0 24px 60px rgba(15, 23, 42, 0.14);
+            --radius-large: 24px;
+            --radius-medium: 12px;
+            --radius-small: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            color-scheme: light;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family:
+                Inter,
+                ui-sans-serif,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(37, 99, 235, 0.15), transparent 32rem),
+                linear-gradient(135deg, #eef4ff 0%, var(--background) 48%, #edf8f5 100%);
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        a {
+            color: var(--primary);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .page-shell {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: minmax(320px, 0.9fr) minmax(520px, 1.1fr);
+        }
+
+        .brand-panel {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: clamp(2rem, 5vw, 5rem);
+            color: white;
+            background:
+                linear-gradient(155deg, rgba(9, 24, 56, 0.96), rgba(30, 64, 175, 0.94)),
+                #163c8c;
+        }
+
+        .brand-panel::before,
+        .brand-panel::after {
+            content: "";
+            position: absolute;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .brand-panel::before {
+            width: 28rem;
+            height: 28rem;
+            top: -11rem;
+            right: -12rem;
+        }
+
+        .brand-panel::after {
+            width: 19rem;
+            height: 19rem;
+            bottom: -8rem;
+            left: -8rem;
+        }
+
+        .brand,
+        .brand-content,
+        .feature-list {
+            position: relative;
+            z-index: 1;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            width: fit-content;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .brand:hover {
+            text-decoration: none;
+        }
+
+        .brand-mark {
+            width: 2.6rem;
+            height: 2.6rem;
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.24);
+            border-radius: 0.85rem;
+            background: rgba(255, 255, 255, 0.14);
+            backdrop-filter: blur(10px);
+        }
+
+        .brand-content {
+            max-width: 36rem;
+            margin: auto 0;
+            padding: 4rem 0;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            padding: 0.45rem 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 999px;
+            color: #dbeafe;
+            background: rgba(255, 255, 255, 0.08);
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .brand-content h1 {
+            max-width: 11ch;
+            margin-bottom: 1.25rem;
+            font-size: clamp(2.4rem, 5vw, 4.4rem);
+            line-height: 1.02;
+            letter-spacing: -0.055em;
+        }
+
+        .brand-content p {
+            max-width: 33rem;
+            color: #d9e6ff;
+            font-size: clamp(1rem, 1.7vw, 1.15rem);
+            line-height: 1.7;
+        }
+
+        .feature-list {
+            display: grid;
+            gap: 0.85rem;
+            list-style: none;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #e9f0ff;
+            font-size: 0.95rem;
+        }
+
+        .check-icon {
+            flex: 0 0 auto;
+            width: 1.6rem;
+            height: 1.6rem;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            color: white;
+            background: rgba(255, 255, 255, 0.16);
+            font-size: 0.78rem;
+            font-weight: 900;
+        }
+
+        .form-panel {
+            display: grid;
+            place-items: center;
+            padding: clamp(1.25rem, 5vw, 4rem);
+        }
+
+        .register-card {
+            width: min(100%, 42rem);
+            padding: clamp(1.5rem, 4vw, 3rem);
+            border: 1px solid rgba(217, 225, 236, 0.9);
+            border-radius: var(--radius-large);
+            background: rgba(255, 255, 255, 0.94);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(12px);
+        }
+
+        .card-header {
+            margin-bottom: 2rem;
+        }
+
+        .mobile-brand {
+            display: none;
+            margin-bottom: 1.75rem;
+            color: var(--text);
+        }
+
+        .mobile-brand .brand-mark {
+            color: white;
+            background: var(--primary);
+        }
+
+        .card-header h2 {
+            margin-bottom: 0.65rem;
+            font-size: clamp(1.9rem, 4vw, 2.6rem);
+            letter-spacing: -0.045em;
+        }
+
+        .card-header p {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .register-form {
+            display: grid;
+            gap: 1.1rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: grid;
+            gap: 0.45rem;
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            font-weight: 750;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .form-group input {
+            width: 100%;
+            min-height: 3.15rem;
+            padding: 0.82rem 0.95rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-medium);
+            color: var(--text);
+            background: var(--surface);
+            outline: none;
+            transition:
+                border-color 160ms ease,
+                box-shadow 160ms ease,
+                background 160ms ease;
+        }
+
+        .form-group input::placeholder {
+            color: #98a2b3;
+        }
+
+        .form-group input:hover {
+            border-color: #aebbd0;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--focus-ring);
+        }
+
+        .form-group input[aria-invalid="true"] {
+            border-color: var(--danger);
+            background: #fffafa;
+        }
+
+        .password-input {
+            padding-right: 4.5rem !important;
+        }
+
+        .password-toggle {
+            position: absolute;
+            top: 50%;
+            right: 0.55rem;
+            transform: translateY(-50%);
+            padding: 0.45rem 0.55rem;
+            border: 0;
+            border-radius: 0.5rem;
+            color: var(--primary);
+            background: transparent;
+            font-size: 0.82rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .password-toggle:hover {
+            background: var(--primary-light);
+        }
+
+        .field-hint {
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            line-height: 1.45;
+        }
+
+        .password-meter {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.35rem;
+            margin-top: 0.15rem;
+        }
+
+        .password-meter span {
+            height: 0.28rem;
+            border-radius: 999px;
+            background: #e4e9f1;
+            transition: background 160ms ease;
+        }
+
+        .password-meter[data-strength="1"] span:nth-child(-n + 1),
+        .password-meter[data-strength="2"] span:nth-child(-n + 2),
+        .password-meter[data-strength="3"] span:nth-child(-n + 3),
+        .password-meter[data-strength="4"] span:nth-child(-n + 4) {
+            background: var(--primary);
+        }
+
+        .terms {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.7rem;
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+
+        .terms input {
+            width: 1.05rem;
+            height: 1.05rem;
+            margin-top: 0.18rem;
+            accent-color: var(--primary);
+        }
+
+        .status-message {
+            display: none;
+            padding: 0.8rem 0.95rem;
+            border-radius: var(--radius-small);
+            font-size: 0.88rem;
+            font-weight: 650;
+            line-height: 1.5;
+        }
+
+        .status-message.is-visible {
+            display: block;
+        }
+
+        .status-message.error {
+            color: var(--danger);
+            background: var(--danger-background);
+        }
+
+        .status-message.success {
+            color: var(--success);
+            background: var(--success-background);
+        }
+
+        .submit-button {
+            min-height: 3.25rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.65rem;
+            border: 0;
+            border-radius: var(--radius-medium);
+            color: white;
+            background: var(--primary);
+            box-shadow: 0 10px 22px rgba(37, 99, 235, 0.22);
+            font-weight: 800;
+            cursor: pointer;
+            transition:
+                transform 160ms ease,
+                background 160ms ease,
+                box-shadow 160ms ease;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-1px);
+            background: var(--primary-dark);
+            box-shadow: 0 14px 28px rgba(37, 99, 235, 0.28);
+        }
+
+        .submit-button:active {
+            transform: translateY(0);
+        }
+
+        .submit-button:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+            transform: none;
+        }
+
+        .spinner {
+            display: none;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.45);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 700ms linear infinite;
+        }
+
+        .submit-button.is-loading .spinner {
+            display: block;
+        }
+
+        .sign-in-link {
+            margin-top: 1.5rem;
+            color: var(--text-muted);
+            text-align: center;
+            font-size: 0.92rem;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .page-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .brand-panel {
+                display: none;
+            }
+
+            .mobile-brand {
+                display: inline-flex;
+            }
+
+            .form-panel {
+                min-height: 100vh;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .form-panel {
+                align-items: start;
+                padding: 0;
+            }
+
+            .register-card {
+                min-height: 100vh;
+                border: 0;
+                border-radius: 0;
+                box-shadow: none;
+                padding: 1.4rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="page-shell">
+        <section class="brand-panel" aria-labelledby="brand-heading">
+            <a class="brand" href="main.html" aria-label="Task App home">
+                <span class="brand-mark" aria-hidden="true">✓</span>
+                <span>Task App</span>
+            </a>
+
+            <div class="brand-content">
+                <span class="eyebrow">Plan less. Accomplish more.</span>
+                <h1 id="brand-heading">Turn your goals into completed tasks.</h1>
+                <p>
+                    Create an account to organize projects, track your progress,
+                    and keep everything important in one place.
+                </p>
+            </div>
+
+            <ul class="feature-list" aria-label="Task App features">
+                <li><span class="check-icon" aria-hidden="true">✓</span> Organize tasks and priorities</li>
+                <li><span class="check-icon" aria-hidden="true">✓</span> Keep projects easy to follow</li>
+                <li><span class="check-icon" aria-hidden="true">✓</span> Access your work from one account</li>
+            </ul>
+        </section>
+
+        <section class="form-panel">
+            <div class="register-card">
+                <a class="brand mobile-brand" href="main.html" aria-label="Task App home">
+                    <span class="brand-mark" aria-hidden="true">✓</span>
+                    <span>Task App</span>
+                </a>
+
+                <header class="card-header">
+                    <h2>Create your account</h2>
+                    <p>Enter your information below to get started.</p>
+                </header>
+
+                <form id="registerForm" class="register-form" novalidate>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First name</label>
+                            <input
+                                id="firstName"
+                                name="firstName"
+                                type="text"
+                                placeholder="John"
+                                autocomplete="given-name"
+                                minlength="2"
+                                maxlength="50"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="lastName">Last name</label>
+                            <input
+                                id="lastName"
+                                name="lastName"
+                                type="text"
+                                placeholder="Doe"
+                                autocomplete="family-name"
+                                minlength="2"
+                                maxlength="50"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input
+                            id="username"
+                            name="username"
+                            type="text"
+                            placeholder="johndoe"
+                            autocomplete="username"
+                            minlength="3"
+                            maxlength="30"
+                            pattern="[A-Za-z0-9_-]+"
+                            aria-describedby="usernameHint"
+                            required
+                        >
+                        <p id="usernameHint" class="field-hint">
+                            Use 3–30 letters, numbers, underscores, or hyphens.
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email address</label>
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            placeholder="john@example.com"
+                            autocomplete="email"
+                            maxlength="120"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="input-wrap">
+                            <input
+                                id="password"
+                                class="password-input"
+                                name="password"
+                                type="password"
+                                placeholder="Create a strong password"
+                                autocomplete="new-password"
+                                minlength="8"
+                                aria-describedby="passwordHint"
+                                required
+                            >
+                            <button
+                                class="password-toggle"
+                                type="button"
+                                data-toggle-password="password"
+                                aria-label="Show password"
+                            >
+                                Show
+                            </button>
+                        </div>
+
+                        <div id="passwordMeter" class="password-meter" data-strength="0" aria-hidden="true">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+
+                        <p id="passwordHint" class="field-hint">
+                            Use at least 8 characters. A mix of letters, numbers, and symbols is strongest.
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm password</label>
+                        <div class="input-wrap">
+                            <input
+                                id="confirmPassword"
+                                class="password-input"
+                                name="confirmPassword"
+                                type="password"
+                                placeholder="Enter your password again"
+                                autocomplete="new-password"
+                                minlength="8"
+                                required
+                            >
+                            <button
+                                class="password-toggle"
+                                type="button"
+                                data-toggle-password="confirmPassword"
+                                aria-label="Show confirmed password"
+                            >
+                                Show
+                            </button>
+                        </div>
+                    </div>
+
+                    <label class="terms" for="terms">
+                        <input id="terms" name="terms" type="checkbox" required>
+                        <span>
+                            I agree to the <a href="#" aria-label="Read terms of service">Terms of Service</a>
+                            and <a href="#" aria-label="Read privacy policy">Privacy Policy</a>.
+                        </span>
+                    </label>
+
+                    <div
+                        id="statusMessage"
+                        class="status-message"
+                        role="alert"
+                        aria-live="polite"
+                    ></div>
+
+                    <button id="submitButton" class="submit-button" type="submit">
+                        <span class="spinner" aria-hidden="true"></span>
+                        <span class="button-text">Create account</span>
+                    </button>
+                </form>
+
+                <p class="sign-in-link">
+                    Already have an account?
+                    <a href="login.html">Sign in</a>
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const form = document.querySelector('#registerForm');
+        const statusMessage = document.querySelector('#statusMessage');
+        const submitButton = document.querySelector('#submitButton');
+        const buttonText = submitButton.querySelector('.button-text');
+        const passwordInput = document.querySelector('#password');
+        const confirmPasswordInput = document.querySelector('#confirmPassword');
+        const passwordMeter = document.querySelector('#passwordMeter');
+
+        document.querySelectorAll('[data-toggle-password]').forEach((button) => {
+            button.addEventListener('click', () => {
+                const input = document.querySelector(
+                    `#${button.dataset.togglePassword}`
+                );
+
+                const shouldShow = input.type === 'password';
+                input.type = shouldShow ? 'text' : 'password';
+                button.textContent = shouldShow ? 'Hide' : 'Show';
+                button.setAttribute(
+                    'aria-label',
+                    shouldShow ? 'Hide password' : 'Show password'
+                );
+            });
+        });
+
+        passwordInput.addEventListener('input', () => {
+            const value = passwordInput.value;
+            let strength = 0;
+
+            if (value.length >= 8) strength++;
+            if (/[a-z]/.test(value) && /[A-Z]/.test(value)) strength++;
+            if (/\d/.test(value)) strength++;
+            if (/[^A-Za-z0-9]/.test(value)) strength++;
+
+            passwordMeter.dataset.strength = String(strength);
+        });
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            clearStatus();
+            clearInvalidFields();
+
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                showStatus('Please complete all required fields correctly.', 'error');
+                return;
+            }
+
+            if (passwordInput.value !== confirmPasswordInput.value) {
+                confirmPasswordInput.setAttribute('aria-invalid', 'true');
+                confirmPasswordInput.focus();
+                showStatus('Your passwords do not match.', 'error');
+                return;
+            }
+
+            const formData = new FormData(form);
+
+            const userData = {
+                firstName: formData.get('firstName').trim(),
+                lastName: formData.get('lastName').trim(),
+                username: formData.get('username').trim(),
+                email: formData.get('email').trim().toLowerCase(),
+                password: formData.get('password')
+            };
+
+            setLoading(true);
+
+            try {
+                const response = await fetch('/api/users/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(userData)
+                });
+
+                const data = await readJsonSafely(response);
+
+                if (!response.ok) {
+                    throw new Error(
+                        data.message ||
+                        data.error ||
+                        'We could not create your account.'
+                    );
+                }
+
+                if (data.token) {
+                    localStorage.setItem('token', data.token);
+                }
+
+                if (data.user) {
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                }
+
+                showStatus('Account created successfully. Redirecting…', 'success');
+
+                window.setTimeout(() => {
+                    window.location.href = data.redirectUrl || 'login.html';
+                }, 900);
+            } catch (error) {
+                showStatus(
+                    error.message ||
+                    'Unable to connect to the server. Please try again.',
+                    'error'
+                );
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        form.addEventListener('input', (event) => {
+            if (event.target.matches('input')) {
+                event.target.removeAttribute('aria-invalid');
+            }
+        });
+
+        async function readJsonSafely(response) {
+            const contentType = response.headers.get('content-type') || '';
+
+            if (!contentType.includes('application/json')) {
+                return {};
+            }
+
+            return response.json();
+        }
+
+        function showStatus(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = `status-message is-visible ${type}`;
+        }
+
+        function clearStatus() {
+            statusMessage.textContent = '';
+            statusMessage.className = 'status-message';
+        }
+
+        function clearInvalidFields() {
+            form.querySelectorAll('[aria-invalid="true"]').forEach((field) => {
+                field.removeAttribute('aria-invalid');
+            });
+        }
+
+        function setLoading(isLoading) {
+            submitButton.disabled = isLoading;
+            submitButton.classList.toggle('is-loading', isLoading);
+            buttonText.textContent = isLoading
+                ? 'Creating account…'
+                : 'Create account';
+        }
+    </script>
+</body>
+</html>
