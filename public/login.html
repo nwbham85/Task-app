@@ -45,10 +45,17 @@
         <a href="#" class="forgot-pass">Forgot password?</a>
       </div>
 
+      <div 
+        id="loginMessage"
+        class="login-message"
+        role="alert"
+        aria-live="polite"
+      ></div>
+
       <!-- Submit -->
       <button type="submit" class="submit-btn">Sign In</button>
     </form>
-    <a href="createAccount.html" class="create-account">Create Account</a>
+    <a href="register.html" class="create-account">Create Account</a>
   </div>
 
   <script>
@@ -101,21 +108,50 @@
         toggleError(passwordGroup, passwordError, false);
       }
 
-      if (isValid) {
-        const response = await fetch('./login', {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                email: emailInput.value.trim(),
-                password: passwordInput.value
-            })
-        });
+      if (!isValid) {
+    return;
+}
 
-        const data = await response.json();
-        console.log(data);
-      }
+const submitButton = loginForm.querySelector(
+    'button[type="submit"]'
+);
+
+submitButton.disabled = true;
+submitButton.textContent = 'Signing in...';
+
+try {
+    const response = await fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email: emailInput.value.trim(),
+            password: passwordInput.value
+        })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(
+            data.message || 'Unable to sign in'
+        );
+    }
+
+    // Temporary login state until JWT authentication is added.
+    localStorage.setItem(
+        'currentUser',
+        JSON.stringify(data.user)
+    );
+
+    window.location.href = './profile.html';
+} catch (error) {
+    showLoginMessage(error.message, 'error');
+} finally {
+    submitButton.disabled = false;
+    submitButton.textContent = 'Sign In';
+}
     });
 
     // Clear errors inline when user types
@@ -126,6 +162,16 @@
     passwordInput.addEventListener('input', () => {
       toggleError(document.getElementById('passwordGroup'), document.getElementById('passwordError'), false);
     });
+
+    function showLoginMessage(message, type) {
+      const loginMessage = document.getElementById('loginMessage');
+
+      loginMessage.textContent = message;
+      loginMessage.className = `login-message ${type}`;
+    }
+
+
+
   </script>
 </body>
 </html>

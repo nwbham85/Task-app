@@ -195,4 +195,33 @@
       transform: scale(0.98);
     }
 
+
+    .login-message {
+    display: none;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.login-message.error {
+    display: block;
+    color: #991b1b;
+    background: #fee2e2;
+    border: 1px solid #fecaca;
+}
+
+.login-message.success {
+    display: block;
+    color: #166534;
+    background: #dcfce7;
+    border: 1px solid #bbf7d0;
+}
+
+.submit-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
     
