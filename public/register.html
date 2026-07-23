@@ -552,7 +552,7 @@
                                 id="firstName"
                                 name="firstName"
                                 type="text"
-                                placeholder="John"
+                                placeholder="first name"
                                 autocomplete="given-name"
                                 minlength="2"
                                 maxlength="50"
@@ -560,19 +560,7 @@
                             >
                         </div>
 
-                        <div class="form-group">
-                            <label for="lastName">Last name</label>
-                            <input
-                                id="lastName"
-                                name="lastName"
-                                type="text"
-                                placeholder="Doe"
-                                autocomplete="family-name"
-                                minlength="2"
-                                maxlength="50"
-                                required
-                            >
-                        </div>
+                        
                     </div>
 
                     <div class="form-group">
@@ -755,7 +743,7 @@
 
             const userData = {
                 firstName: formData.get('firstName').trim(),
-                lastName: formData.get('lastName').trim(),
+                
                 username: formData.get('username').trim(),
                 email: formData.get('email').trim().toLowerCase(),
                 password: formData.get('password')
@@ -846,5 +834,6 @@
                 : 'Create account';
         }
     </script>
+    <script src="./register.js"></script>
 </body>
 </html>
