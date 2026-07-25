@@ -14,3 +14,16 @@
     border-radius: 10px;
     margin:5px;
 }
+
+.btn-div {
+    display:flex;
+    align-content: stretch;
+    margin-top:10px;
+}
+
+.counter {
+    font-size: 2rem;
+    width:50px;
+    margin-left:10px;
+    
+}
