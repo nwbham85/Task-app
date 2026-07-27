@@ -10,8 +10,8 @@ export function post(title, text) {
         postId: null,
         title: title ? title.trim() : '',
         text: text ? text.trim() : '',
-        likes: this.likes,
-        dislikes: this.dislikes,
+        likes: 0,
+        dislikes: 0,
         comments: [],
 
         likeOrDislikePost(reaction) {
@@ -158,15 +158,7 @@ export function renderPost(newPost, postList) {
             </div>
         </div>
 
-        <div class="reaction-row">
-            <button class="like-btn">
-                Like <span class="like-count">${newPost.likes}</span>
-            </button>
-
-            <button class="dislike-btn">
-                Dislike <span class="dislike-count">${newPost.dislikes}</span>
-            </button>
-        </div>
+        
 
         <button class="reaction-btn" data-reaction="like">
             Like <span class="like-count">${newPost.likes}</span>
