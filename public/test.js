@@ -12,21 +12,21 @@ button.addEventListener('click', (e) => {
 
     // POST counter value to /test
     try {
-
-        const response = await fetch('/test'), {
+        const response = await fetch('/test', {
             method: 'POST',
             headers: {
-                'Content-Type': application/json,
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 counter
-            })
-            }
+            }),
+        });
 
-        }
-    }catch (error) {
+        const data = await response.json(); // Optional: Parse response payload
+        console.log('Success:', data);
+    } catch (error) {
         console.log('Error:', error);
-    }
+}
     
     
 });

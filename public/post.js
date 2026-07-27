@@ -1,4 +1,4 @@
-import storage from '../objects/storage.js';
+import storage from './storage.js';
 
 
 // init storage object

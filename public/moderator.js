@@ -1,4 +1,4 @@
-import { createUser } from '../objects/user.js';
+import { createUser } from './user.js';
 
 const currentUser = createUser('Nathan', 'Winslow', 'nwinslow');
 
