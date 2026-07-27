@@ -10,7 +10,21 @@ export function post(title, text) {
         postId: null,
         title: title ? title.trim() : '',
         text: text ? text.trim() : '',
+        likes: this.likes,
+        dislikes: this.dislikes,
         comments: [],
+
+        likeOrDislikePost(reaction) {
+            if (reaction === 'like') {
+            this.likes++;
+            return this.likes;
+        }
+
+        if (reaction === 'dislike') {
+            this.dislikes++;
+            return this.dislikes;
+            }
+        },
 
         addComment(newComment) {
             this.comments.push(newComment);
@@ -143,6 +157,24 @@ export function renderPost(newPost, postList) {
                 <button class="primary comment-btn">Comment</button>
             </div>
         </div>
+
+        <div class="reaction-row">
+            <button class="like-btn">
+                Like <span class="like-count">${newPost.likes}</span>
+            </button>
+
+            <button class="dislike-btn">
+                Dislike <span class="dislike-count">${newPost.dislikes}</span>
+            </button>
+        </div>
+
+        <button class="reaction-btn" data-reaction="like">
+            Like <span class="like-count">${newPost.likes}</span>
+            </button>
+
+            <button class="reaction-btn" data-reaction="dislike">
+            Dislike <span class="dislike-count">${newPost.dislikes}</span>
+        </button>
     `;
 
     postList.prepend(postDiv);

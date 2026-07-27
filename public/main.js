@@ -78,6 +78,7 @@ function init() {
 // --- Click delegation -----------------------------------------------------
 
 const actionHandlers = {
+    'reaction-btn': handleReaction,
     'flag-btn': handleFlag,
     'comment-btn': handleAddComment,
     'edit-comment-btn': handleEditComment,
@@ -85,6 +86,28 @@ const actionHandlers = {
     'edit-post-btn': handleEditPostClick,
     'delete-post-btn': handleDeletePost
 };
+
+function handleReaction(event, targetPost, postCard) {
+    const button = event.target.closest('.reaction-btn');
+
+    const reaction = button.dataset.reaction;
+
+    targetPost.likeOrDislikePost(reaction);
+
+    if (reaction === 'like') {
+        const likeCount = postCard.querySelector('.like-count');
+
+        likeCount.textContent = targetPost.likes;
+    }
+
+    if (reaction === 'dislike') {
+        const dislikeCount = postCard.querySelector('.dislike-count');
+
+        dislikeCount.textContent = targetPost.dislikes;
+    }
+
+    db.savePost(allPosts);
+}
 
 function handlePostActions(event) {
     const postCard = event.target.closest('.post');
