@@ -46,34 +46,53 @@ function restorePost(savedPost) {
 }
 
 function init() {
-
     db.getPost().forEach(restorePost);
 
-    createBtn.addEventListener('click', () => {
-    const result = moderator(postTextInput.value);
+    createBtn.addEventListener('click', async () => {
+        const moderationResult = moderator(postTextInput.value);
 
-    if (result.banned) {
-        console.log('User is banned.');
-        return;
-    }
+        if (moderationResult.banned) {
+            return;
+        }
 
-    if (!result.approved) {
-        console.log(`Post rejected.`);
-        return;
-    }
+        if (!moderationResult.approved) {
+            return;
+        }
 
-    createNewPost({
-        postTitleInput,
-        postTextInput,
-        postList,
-        allPosts
+        try {
+            const result = await createPostInDB(
+                postTitleInput.value,
+                postTextInput.value
+            );
+
+            const savedPost = result.data;
+
+            const newPost = post(
+                savedPost.title,
+                savedPost.text
+            );
+
+            newPost.postId = savedPost._id;
+
+            allPosts.push(newPost);
+
+            renderPost(newPost, postList);
+
+            postTitleInput.value = '';
+            postTextInput.value = '';
+
+            } catch (error) {
+            console.error(error);
+        }
     });
-});
 
     postList.addEventListener('click', handlePostActions);
     saveEditBtn.addEventListener('click', handleSaveEdit);
     cancelEditBtn.addEventListener('click', closeEditModal);
 }
+
+    
+
 
 // --- Click delegation -----------------------------------------------------
 
@@ -117,11 +136,13 @@ function handlePostActions(event) {
     if (!targetPost) return;
 
     for (const [className, handler] of Object.entries(actionHandlers)) {
-        if (event.target.classList.contains(className)) {
-            handler(event, targetPost, postCard);
-            return;
-        }
+    const actionElement = event.target.closest(`.${className}`);
+
+    if (actionElement && postCard.contains(actionElement)) {
+        handler(event, targetPost, postCard);
+        return;
     }
+ }
 }
 
 function handleFlag(event, targetPost) {
@@ -248,3 +269,23 @@ function renderComments(postObj, commentList) {
     });
 }
 
+async function createPostInDB(title, text) {
+    const response = await fetch('/api/v1/posts', {
+        method: 'POST',
+
+        headers: {
+            'Content-Type': 'application/json'
+        },
+
+        body: JSON.stringify({
+            title,
+            text
+        })
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to create post');
+    }
+
+    return response.json();
+}
