@@ -7,6 +7,6 @@ const router = express.Router();
 router
     .route('/')
     .get(getItems)
-    .post(postItem);
+    .post(postItems);
 
 export default router;
