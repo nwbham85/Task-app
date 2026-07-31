@@ -6,7 +6,7 @@ const router = express.Router();
 
 router
     .route('/')
-    .get(itemController.getItems())
-    .post(itemController.postItem());
+    .get(getItems)
+    .post(postItem);
 
 export default router;

@@ -1,32 +1,36 @@
-
-// select html element
-
+// Select HTML elements
 const button = document.querySelector('.btn');
 const counter = document.querySelector('.counter');
 
-button.addEventListener('click', (e) => {
-    let startingCount;
-    counter.value = Number(counter.value) + 1;
+// Give the counter an initial value
+counter.value = 0;
 
-    console.log(counter.dataset.group);
+button.addEventListener('click', async () => {
+    const newCount = Number(counter.value) + 1;
 
-    // POST counter value to /test
+    // Update the page
+    counter.value = newCount;
+
     try {
         const response = await fetch('/test', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                counter
-            }),
+                count: newCount,
+                group: counter.dataset.group
+            })
         });
 
-        const data = await response.json(); // Optional: Parse response payload
-        console.log('Success:', data);
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Request failed');
+        }
+
+        console.log('Saved item:', data);
     } catch (error) {
-        console.log('Error:', error);
-}
-    
-    
+        console.error('Error:', error.message);
+    }
 });

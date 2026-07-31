@@ -8,6 +8,7 @@ import posts from './routes/posts.js';
 import home from './routes/home.js';
 import user from './routes/user.js';
 import loginRoutes from './routes/login_route.js';
+import testRoutes from './routes/test.js';
 
 dotenv.config({path: './config/config.env'});
 console.log('enviroment variables loaded');
@@ -26,6 +27,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // mounts
+app.use('/test', testRoutes);
 app.use('/api/v1/posts', posts);
 app.use('/api/v1/user', user);
 app.use(loginRoutes);
