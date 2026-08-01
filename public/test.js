@@ -1,69 +1,98 @@
 const itemContainer = document.querySelector('.item-container');
 const divInventory = document.querySelector('.inventory');
-const countSpan = document.querySelector('.count'); // Added dot (.) for class selector
+const countSpan = document.querySelector('.count');
 
-const MAX_INVENTORY = 4; // Set your max capacity limit here
+const MAX_INVENTORY = 4;
 
-// Helper function to update the DOM count display
-function updateInventoryCount() {
-    // Count how many .item elements are inside divInventory
-    const currentCount = divInventory.querySelectorAll('.item').length;
-    countSpan.textContent = `(${currentCount}/${MAX_INVENTORY})`;
+// Make sure the required elements exist
+if (!itemContainer || !divInventory || !countSpan) {
+    throw new Error(
+        'Missing .item-container, .inventory, or .count element.'
+    );
 }
 
-// Initial update on page load
+function updateInventoryCount() {
+    const currentCount =
+        divInventory.querySelectorAll('.item').length;
+
+    countSpan.textContent =
+        `(${currentCount}/${MAX_INVENTORY})`;
+}
+
 updateInventoryCount();
 
-// 1. ADD ITEM TO INVENTORY
-itemContainer.addEventListener('click', async (e) => {
-    const itemClicked = e.target.closest('.item');
-    if (!itemClicked) return; // Exit if user clicked the background container
+// ADD ITEM
+itemContainer.addEventListener('click', async (event) => {
+    const itemClicked = event.target.closest('.item');
 
-    const currentCount = divInventory.querySelectorAll('.item').length;
+    if (!itemClicked) {
+        return;
+    }
 
-    // Check if full before adding
+    const currentCount =
+        divInventory.querySelectorAll('.item').length;
+
     if (currentCount >= MAX_INVENTORY) {
         alert('Inventory is full!');
         return;
     }
 
-    divInventory.appendChild(itemClicked);
-    updateInventoryCount();
+    const itemData = {
+        id: itemClicked.dataset.id,
+        name: itemClicked.textContent.trim()
+    };
 
-    //post to /test
     try {
-        const response = await fetch('/test' , {
+        const response = await fetch('/test', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                id:itemClicked.dataset.id,
-                name: itemClicked.textContent.trim()
-            })
-
+            body: JSON.stringify(itemData)
         });
 
-        const data = await response.json();
+        const contentType =
+            response.headers.get('content-type');
+
+        let data;
+
+        if (
+            contentType &&
+            contentType.includes('application/json')
+        ) {
+            data = await response.json();
+        } else {
+            data = await response.text();
+        }
 
         if (!response.ok) {
-            throw new Error(
-                data.message ||
-                data.error ||
-                'we could not post'
-            );
+            const message =
+                data?.message ||
+                data?.error ||
+                data ||
+                'We could not save the item.';
+
+            throw new Error(message);
         }
-    }catch(error) {
-        console.log(error);
+
+        // Only move the item after the server saves it
+        divInventory.appendChild(itemClicked);
+        updateInventoryCount();
+
+        console.log('Item saved:', data);
+    } catch (error) {
+        console.error('POST /test failed:', error);
+        alert(error.message);
     }
 });
 
-// 2. REMOVE ITEM FROM INVENTORY (RETURN TO SHOP/CONTAINER)
-divInventory.addEventListener('click', (e) => {
-    const itemClicked = e.target.closest('.item');
-    
-    // Exit if user clicked the <h4> heading, count span, or background
-    if (!itemClicked) return; 
+// REMOVE ITEM
+divInventory.addEventListener('click', (event) => {
+    const itemClicked = event.target.closest('.item');
+
+    if (!itemClicked) {
+        return;
+    }
 
     itemContainer.appendChild(itemClicked);
     updateInventoryCount();
