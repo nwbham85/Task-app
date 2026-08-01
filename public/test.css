@@ -27,3 +27,28 @@
     margin-left:10px;
     
 }
+
+ /* inventory styles */
+
+ .item-container {
+    margin-top:10px;
+ }
+
+ .item {
+    margin:10px;
+    padding:10px;
+    border:1px solid black;
+    cursor: pointer;
+ }
+
+ .item:hover {
+    border-width: 2px;
+ }
+
+ .inventory {
+    border:1px solid purple;
+    border-radius: 10px;
+    padding:10px;
+    height:300px;
+    overflow:auto;
+ }

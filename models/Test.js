@@ -5,7 +5,7 @@ const testSchema = new mongoose.Schema(
         count: {
             type: Number,
             required: true,
-            min: 0
+            min: [1, 'cannot submit less than 1']
         },
 
         group: {

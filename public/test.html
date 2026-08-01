@@ -9,20 +9,29 @@
 <body>
     <h1>Welcome to test API </h1>
     
+        
+
         <section class="container">
             <div class="about">
                 <h3>About</h3>
-                <p>When button clicked, increase counter by 1</p>
+                <p>Add items to inventory. Display inventory selected
+                    and alert when inventroy is full. </p>
             </div>
 
-            <div class="btn-div">
-                <button type="button" class="btn">Add Item</button>
-                <input type="text" 
-                    readonly 
-                    class="counter" 
-                    data-group="group 1"
-                    value="0">
+            <div class="item-container">
+                <p class="item" data-size="4">item 1</p>
+                <p class="item" data-size="4">item 2</p>
+                <p class="item" data-size="3">item 3</p>
+                <p class="item" data-size="2">item 3</p>
+                <p class="item" data-size="1">item 3</p>
             </div>
+
+            <div class="inventory">
+                <h4>inventory <span class="count"></span></h4>
+                    // added with js
+                
+            </div>
+
         </section>
 
 
