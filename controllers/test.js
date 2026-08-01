@@ -3,15 +3,17 @@ import Test from '../models/Test.js';
 // GET /test
 export async function getItems(req, res) {
     try {
-        const items = await Test.find().sort({ createdAt: -1 });
+        const items = await Test.find().sort({
+            createdAt: 1
+        });
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             count: items.length,
             data: items
         });
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: error.message
         });
@@ -21,26 +23,38 @@ export async function getItems(req, res) {
 // POST /test
 export async function postItems(req, res) {
     try {
-        const { count, group } = req.body;
+        console.log('POST /test request body:', req.body);
 
-        if (!Number.isFinite(count)) {
+        const { count, group } = req.body ?? {};
+        const numericCount = Number(count);
+
+        if (!Number.isFinite(numericCount)) {
             return res.status(400).json({
                 success: false,
-                message: 'count must be a number'
+                message: 'count must be a valid number'
+            });
+        }
+
+        if (!group || typeof group !== 'string') {
+            return res.status(400).json({
+                success: false,
+                message: 'group is required'
             });
         }
 
         const item = await Test.create({
-            count,
-            group
+            count: numericCount,
+            group: group.trim()
         });
 
-        res.status(201).json({
+        return res.status(201).json({
             success: true,
             data: item
         });
     } catch (error) {
-        res.status(500).json({
+        console.error('POST /test controller error:', error);
+
+        return res.status(500).json({
             success: false,
             message: error.message
         });
