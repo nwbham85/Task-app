@@ -1,10 +1,47 @@
 import express from 'express';
-import { getUserByUsername } from '../controllers/userController.js';
 
-export default function userRoutes() {
-  const router = express.Router();
+import {
+  getUserAccount, 
+  createUserAccount,
+  deleteAccount,
+} from '../controllers/userController.js';
 
-  router.get('/', getUserByUsername);
+const router = express.Router();
 
-  return router;
-}
+router.route('/:userId')
+  .get(getUserAccount)
+  .post(createUserAccount)
+  .delete(deleteAccount);
+
+
+// ---------------------- post -------------------------
+router.post('/:userId/comments', (req, res) => {
+  res.status(200).json({
+    success: true,
+    id: `Comments from userId: ${req.params.userId}`
+  });
+});
+
+
+      // ------------------- GET  -----------------------
+
+
+
+router.get('/:userId/comments', (req, res) => {
+  res.status(200).json({
+    success: true,
+    id: `Comments from userId: ${req.params.userId}`
+  });
+});
+    // --------------------- put ------------------------
+
+
+router.put('/:userId/comments', (req, res) => {
+  res.status(200).json({
+    success: true,
+    msg: 'Comment edited'
+  });
+});
+
+  
+export default router;

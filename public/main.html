@@ -3,194 +3,307 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link rel="stylesheet" href="main.css">
-  <script type="module" src="main.js"></script>
-<style>
-
-* {
-  padding:0;
-  margin:0;
-  box-sizing: border-box;
-}
-
-.app {
-  padding:10px;
-}
-.navbar {
-  display:flex;
-  justify-content: right;
-  gap:10px;
-  border:2px solid black;
-  padding:20px;
-  border-radius: 10px;
-  margin-bottom: 5px;
-}
-
-.navbar .navBtn {
-  color:black;
-  font-weight: 700;
-  padding:5px;
-  border-radius: 10px;
-}
-
-.navBtn:hover {
-  color:lightseagreen;
-  cursor: pointer;
-}
-      /* directory */
-
-.directory {
+  <title>Assistance Request Form</title>
   
-}
-.nonprofit-card {
-  display:flex;
-  flex-direction: column;
-  gap:10px;
-  border:1px solid black;
-  border-radius: 10px;
-  padding:20px;
-  margin:10px;
-}
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
 
-.nonprofit-card :nth-child(1) {
-  margin-top:10px;
-}
+    body {
+      background-color: #f3f4f6;
+      color: #1f2937;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
 
-.nonprofit-card .rolesList {
-  list-style:disc;
-  padding-left:10px;
-}
+    section {
+      width: 100%;
+      max-width: 550px;
+    }
 
-.rolesList {
-  display:flex;
-  flex-direction: column;
-}
+    .requestForm {
+      background: #ffffff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
 
-.roleItem {
-  display:flex;
-  justify-content: space-between;
-}
+    .checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
 
-</style>
+  .checkbox-card {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background-color: #f9fafb;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .checkbox-card:hover {
+    background-color: #f3f4f6;
+    border-color: #9ca3af;
+  }
+
+  /* Style checkbox input */
+  .checkbox-card input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #2563eb;
+    cursor: pointer;
+  }
+
+    /* Labels & Legend */
+    label, legend {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 0.35rem;
+      display: block;
+    }
+
+    /* Text inputs, select, and textarea styling */
+    input[type="text"],
+    input[type="tel"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 1rem;
+      color: #111827;
+      background-color: #f9fafb;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input[type="text"]:focus,
+    input[type="tel"]:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+      background-color: #ffffff;
+    }
+
+    /* Specific control adjustments */
+    select[multiple] {
+      height: 140px;
+      padding: 0.5rem;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    /* Fieldset for Radio Group */
+    fieldset {
+      border: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 400;
+      cursor: pointer;
+    }
+
+    input[type="radio"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #2563eb;
+      cursor: pointer;
+    }
+
+    /* Submit Button */
+    button[type="submit"] {
+      background-color: #2563eb;
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 0.85rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      margin-top: 0.5rem;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #1d4ed8;
+    }
+  </style>
 </head>
 <body>
-<section class="app">
-
-  <nav class="navbar">
-    <button type = 'button' class="navBtn register" name="register">Register</button>
-    <button type = 'button' class="navBtn login" name="login">Login</button>
-  </nav>
-
-  <section class="directory">
-    <h3 class="directory-header">Directory</h3>
-      <div class="nonprofit-card">
-        <p>Name: <span class="nonprofit-name">Foodbank</span></p>
-        <p>About us:</p>
-        <p>Positions available: <span class="positionAmt">2</span></p>
-        
-          <ul class="rolesList">
-            <p>Roles:</p>
-            <li class="roleItem">Bagger<span class="descrip">Description: put food in bags.</span><span class="hoursNeeded"> 5hrs</span><span class="payout">Payout: $100</span><span><button class="apply">Apply</button></button></span></li>
-            <li class="roleItem">other</li>
-          </ul>
-      </div>
-
-      <div class="nonprofit-card">
-        <p>Name: <span class="nonprofit-name">Foodbank</span></p>
-        <p>About us:</p>
-        <p>Positions available: <span class="positionAmt">2</span></p>
-        
-          <ul class="rolesList">
-            <p>Roles:</p>
-            <li class="roleItem">Bagger<span class="hoursNeeded"> 5hrs</span><span class="payout">Payout: $100</span><span><button class="apply">Apply</button></button></span></li>
-            <li class="roleItem">other</li>
-          </ul>
-      </div>
-  </section>
-
-
-  <section class="comment-container">
-    <div class="comment-header">
-      <h3>Comments</h3>
-      <input type="text" class="input" name="comment" required minlength="2" maxlength="150" placeholder="type your comment...">
-      <button type="button" class="postBtn" name="submit-comment">Send</button>
-    </div>
-    <div class="comments">
-      <!-- content added through js -->
-        
-    </div>
-  </section>
 
   <section>
-    <button id="loadTest">Load Test Data</button>
-    <div class="output"></div>
+    <form class="requestForm" name="requestForm">
+      
+      <div>
+          <label>What do you need assistance with?</label>
+          <div class="checkbox-group">
+            <label class="checkbox-card">
+              <input type="checkbox" name="needType[]" value="Food"> Food
+            </label>
+            <label class="checkbox-card">
+              <input type="checkbox" name="needType[]" value="Water"> Water
+            </label>
+            <label class="checkbox-card">
+              <input type="checkbox" name="needType[]" value="medical"> Medical attention
+            </label>
+            <label class="checkbox-card">
+              <input type="checkbox" name="needType[]" value="Shelter"> Shelter
+            </label>
+            <label class="checkbox-card">
+              <input type="checkbox" name="needType[]" value="transport"> Transportation
+            </label>
+            <label class="checkbox-card">
+              <input type="checkbox" name="needType[]" value="medicalStorage"> Medication storage
+            </label>
+            <label class="checkbox-card">
+              <input type="checkbox" name="needType[]" value="protection">Protection
+            </label>
+            <label class="checkbox-card">
+              <input type="checkbox" name="needType[]" value="other"> Other
+            </label>
+          </div>
+      </div>
+
+      <div>
+        <label for="description">Describe the situation</label>
+        <textarea id="description" name="description" required></textarea>
+      </div>
+
+      <fieldset>
+        <legend>Are you representing yourself or a group?</legend>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="representation" value="Myself" checked> Myself
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="representation" value="Group"> Group
+          </label>
+        </div>
+      </fieldset>
+
+      <div>
+        <label for="location">Where is help needed?</label>
+        <input id="location" name="location" 
+          type="text" required
+          placeholder="provide an address or nearest landmarks.">
+      </div>
+
+      <div>
+        <label for="phone">Contact phone number</label>
+        <input id="phone" name="phone" type="tel" required>
+      </div>
+
+      <button type="submit" class="submit">Submit Request</button>
+
+    </form>
   </section>
+  <script>
+    
+    document.addEventListener('DOMContentLoaded', () => {
+  const form = document.forms['requestForm'];
 
-</section>
-  
+  form.addEventListener('submit', async (event) => {
+    // 1. Prevent standard browser page reload
+    event.preventDefault();
+
+    // 2. Gather values for multi-select (or checkboxes)
+    const needTypeSelect = form.elements['needType'];
+    const needTypeValues = Array.from(needTypeSelect.selectedOptions)
+      .map(option => option.value);
+
+    // Filter out placeholder option if selected
+    const selectedNeeds = needTypeValues.filter(val => val !== "");
+
+    // Basic client-side check for multi-select
+    if (selectedNeeds.length === 0) {
+      alert("Please select at least one type of assistance.");
+      return;
+    }
+
+    // 3. Build payload object
+    const formData = {
+      needType: selectedNeeds,
+      description: form.elements['description'].value.trim(),
+      representation: form.elements['representation']?.value || 'Myself',
+      location: form.elements['location'].value.trim(),
+      phone: form.elements['phone'].value.trim()
+    };
+
+    try {
+      // Disable submit button during request
+      const submitBtn = form.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Submitting...';
+
+      // 4. Send POST request to backend API
+      const response = await fetch('/api/request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        alert('Request submitted successfully!');
+        form.reset(); // Clear form fields
+      } else {
+        alert(`Submission failed: ${result.message || 'Server error'}`);
+      }
+
+    } catch (error) {
+      console.error('Network or server error:', error);
+      alert('Unable to reach the server. Please check your connection and try again.');
+
+    } finally {
+      // Re-enable button
+      const submitBtn = form.querySelector('button[type="submit"]');
+      submitBtn.disabled = false;
+      submitBtn.innerText = 'Submit Request';
+    }
+  });
+});
 
 
 
 
-<!-- login modal -->
-<div class="modal login-modal">
-  <div class="modal-content">
-    <span class="modal-close login-close">&times;</span>
-
-    <h3>Login</h3>
-
-    <div class="input">
-      <input
-        type="text"
-        class="login-username"
-        required
-        minlength="2"
-        placeholder="username"
-      >
-
-      <input
-        type="password"
-        class="login-password"
-        required
-        minlength="5"
-        placeholder="password"
-      >
-
-      <button type="button" class="loginBtn">Login</button>
-    </div>
-  </div>
-</div>
-
-<!-- register modal -->
-<div class="modal register-modal">
-  <div class="modal-content">
-    <span class="modal-close register-close">&times;</span>
-
-    <h3>Register Manager Account</h3>
-
-    <div class="input">
-      <input
-        type="email"
-        class="register-email"
-        required
-        minlength="2"
-        placeholder="type email"
-      >
-
-      <input
-        type="password"
-        class="register-password"
-        required
-        minlength="5"
-        placeholder="create password of five characters"
-      >
-
-      <button type="button" class="registerBtn">Create Account</button>
-    </div>
-  </div>
-</div>
-
+  </script>
 
 </body>
 </html>
