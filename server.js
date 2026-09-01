@@ -20,6 +20,8 @@ dotenv.config({ path: path.join(__dirname, './config.env') });
 
 const app = express();
 app.use(express.json());
+// Serves everything inside the /public folder
+app.use(express.static('public'));
 
 //connect to db
 connectDB();
