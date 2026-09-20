@@ -161,3 +161,30 @@ export const updateTask = async (req, res) => {
     });
   }
 };
+
+export const deleteTask = async (req, res) => {
+
+  try {
+      const deletedTask = await Task.findByIdAndDelete(req.params.id);
+
+      //if task doesnt exist
+      if (!deletedTask) {
+        return res.status(404).json({
+          message: 'task not found'
+        });
+      }
+
+      //return success response
+      return res.send(200).json({
+        message: 'task deleted',
+        body: deletedTask
+      });
+
+  } catch (error) {
+    console.log(error.message);
+
+    return res.send(500).json({
+      message: error.message;
+    });
+  }
+}

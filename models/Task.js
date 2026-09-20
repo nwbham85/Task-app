@@ -34,6 +34,12 @@ const taskSchema = new mongoose.Schema(
       required: true,
       trim: true
     },
+    description: {
+      type: String,
+      retured: true,
+      trim: true
+    },
+    
     isComplete: {
       type: Boolean,
       default: false
