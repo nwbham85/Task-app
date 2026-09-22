@@ -1,5 +1,6 @@
 import Task from '../models/Task.js';
 
+
 // GET /api/tasks
 export const getTasks = async (req, res) => {
   
@@ -17,24 +18,30 @@ export const getTasks = async (req, res) => {
 // get task status 
 export const getTaskStatus = async (req, res) => {
   try {
-    const { isComplete } = req.query; // defaults to "open" if not provided
+    const { isComplete } = req.query;
 
-    const validStatuses = [true, false];
-    if (!validStatuses.includes(isComplete)) {
+    if (!['true', 'false'].includes(isComplete)) {
       return res.status(400).json({
-        error: `Invalid status "${isComplete}". Must be one of: ${validStatuses.join(', ')}`
+        message: 'isComplete must be either true or false'
       });
     }
 
-    const tasks = await Task.find({ isComplete }); // adjust to your DB/model
+    const booleanStatus = isComplete === 'true';
 
-    res.json({
-      isComplete,
+    const tasks = await Task.find({
+      isComplete: booleanStatus
+    });
+
+    return res.status(200).json({
+      isComplete: booleanStatus,
       count: tasks.length,
       tasks
     });
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to retrieve tasks', details: err.message });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Failed to retrieve tasks',
+      error: error.message
+    });
   }
 };
 
@@ -93,20 +100,10 @@ export const getTaskHistory = async (req, res) => {
   }
 };
 
-// POST /api/tasks
+// POST /tasks
 export const createTask = async (req, res) => {
   try {
-    const { title } = req.body;
-
-    if (
-      typeof title === 'string' &&
-      title.toLowerCase().includes('test')
-    ) {
-      return res.status(400).json({
-        message: 'Failed: "test" is not allowed in the title'
-      });
-    }
-
+    
     const task = await Task.create(req.body);
 
     return res.status(201).json({
@@ -120,7 +117,7 @@ export const createTask = async (req, res) => {
   }
 };
 
-// PATCH /api/tasks/:id
+// PATCH /tasks/:id
 export const updateTask = async (req, res) => {
   try {
     const { title, isComplete } = req.body;
@@ -190,28 +187,28 @@ export const updateTask = async (req, res) => {
 };
 
 export const deleteTask = async (req, res) => {
-
   try {
-      const deletedTask = await Task.findByIdAndDelete(req.params.id);
+    const deletedTask = await Task.findByIdAndDelete(req.params.id);
 
-      //if task doesnt exist
-      if (!deletedTask) {
-        return res.status(404).json({
-          message: 'task not found'
-        });
-      }
-
-      //return success response
-      return res.send(200).json({
-        message: 'task deleted',
-        body: deletedTask
+    if (!deletedTask) {
+      return res.status(404).json({
+        message: 'Task not found'
       });
+    }
 
+    return res.status(200).json({
+      message: 'Task deleted',
+      body: deletedTask
+    });
   } catch (error) {
-    console.log(error.message);
+    if (error.name === 'CastError') {
+      return res.status(400).json({
+        message: 'Invalid task ID'
+      });
+    }
 
-    return res.send(500).json({
+    return res.status(500).json({
       message: error.message
     });
   }
-}
+};

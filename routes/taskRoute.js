@@ -17,7 +17,7 @@ import {
 const router = express.Router();
 
 router.get('/', getTasks);
-router.get('?status=open', getTaskStatus);
+router.get('/status', getTaskStatus);
 router.get('/:id/history', getTaskHistory);
 router.get('/:id', getTaskById);
 
