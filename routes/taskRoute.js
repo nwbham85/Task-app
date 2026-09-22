@@ -5,6 +5,7 @@ import {
   getTasks,
   getTaskById,
   getTaskHistory,
+  getTaskStatus,
     //POST
   createTask,
     //PATCH
@@ -16,6 +17,7 @@ import {
 const router = express.Router();
 
 router.get('/', getTasks);
+router.get('?status=open', getTaskStatus);
 router.get('/:id/history', getTaskHistory);
 router.get('/:id', getTaskById);
 
@@ -23,6 +25,6 @@ router.post('/', createTask);
 
 router.patch('/:id', updateTask);
 
-router.delete('/delete', deleteTask);
+router.delete('/delete/:id', deleteTask);
 
 export default router;

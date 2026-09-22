@@ -2,6 +2,7 @@ import Task from '../models/Task.js';
 
 // GET /api/tasks
 export const getTasks = async (req, res) => {
+  
   try {
     const tasks = await Task.find();
 
@@ -12,6 +13,32 @@ export const getTasks = async (req, res) => {
     });
   }
 };
+
+// get task status 
+export const getTaskStatus = async (req, res) => {
+  try {
+    const { isComplete } = req.query; // defaults to "open" if not provided
+
+    const validStatuses = [true, false];
+    if (!validStatuses.includes(isComplete)) {
+      return res.status(400).json({
+        error: `Invalid status "${isComplete}". Must be one of: ${validStatuses.join(', ')}`
+      });
+    }
+
+    const tasks = await Task.find({ isComplete }); // adjust to your DB/model
+
+    res.json({
+      isComplete,
+      count: tasks.length,
+      tasks
+    });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to retrieve tasks', details: err.message });
+  }
+};
+
+
 
 // GET /api/tasks/:id
 export const getTaskById = async (req, res) => {
@@ -184,7 +211,7 @@ export const deleteTask = async (req, res) => {
     console.log(error.message);
 
     return res.send(500).json({
-      message: error.message;
+      message: error.message
     });
   }
 }
