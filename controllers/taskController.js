@@ -47,7 +47,7 @@ export const getTaskStatus = async (req, res) => {
 
 
 
-// GET /api/tasks/:id
+// GET /tasks/:id
 export const getTaskById = async (req, res) => {
   try {
     const task = await Task.findById(req.params.id);
@@ -72,7 +72,7 @@ export const getTaskById = async (req, res) => {
   }
 };
 
-// GET /api/tasks/:id/history
+// GET /tasks/:id/history
 export const getTaskHistory = async (req, res) => {
   try {
     const task = await Task.findById(req.params.id).select('history');
@@ -102,6 +102,8 @@ export const getTaskHistory = async (req, res) => {
 
 // POST /tasks
 export const createTask = async (req, res) => {
+
+  
   try {
     
     const task = await Task.create(req.body);
@@ -185,6 +187,8 @@ export const updateTask = async (req, res) => {
     });
   }
 };
+
+// DELETE /delete/:id
 
 export const deleteTask = async (req, res) => {
   try {

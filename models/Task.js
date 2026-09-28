@@ -36,7 +36,7 @@ const taskSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      retured: true,
+      required: true,
       trim: true
     },
     
