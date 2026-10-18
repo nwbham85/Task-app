@@ -40,10 +40,12 @@ const taskSchema = new mongoose.Schema(
       trim: true
     },
     
-    isComplete: {
-      type: Boolean,
-      default: false
+    status: {
+      type: String,
+      enum: ['open', 'pending', 'complete'],
+      default: 'open'
     },
+    assignees: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     history: {
       type: [historySchema],
       default: []

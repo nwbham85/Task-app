@@ -18,22 +18,23 @@ export const getTasks = async (req, res) => {
 // get task status 
 export const getTaskStatus = async (req, res) => {
   try {
-    const { isComplete } = req.query;
+    const { status } = req.query;
+    const validStatuses = Task.schema.path('status').enumValues;
+    const normalizedStatus =
+      typeof status === 'string' ? status.toLowerCase() : status;
 
-    if (!['true', 'false'].includes(isComplete)) {
+    if (!validStatuses.includes(normalizedStatus)) {
       return res.status(400).json({
-        message: 'isComplete must be either true or false'
+        message: `Status must be one of: ${validStatuses.join(', ')}`
       });
     }
 
-    const booleanStatus = isComplete === 'true';
-
     const tasks = await Task.find({
-      isComplete: booleanStatus
+      status: normalizedStatus
     });
 
     return res.status(200).json({
-      isComplete: booleanStatus,
+      status: normalizedStatus,
       count: tasks.length,
       tasks
     });

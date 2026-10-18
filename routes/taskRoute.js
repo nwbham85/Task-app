@@ -16,15 +16,16 @@ import {
 
 const router = express.Router();
 
-router.get('/', getTasks);
+router.route('/')
+  .get(getTasks)
+  .post(createTask);
+
 router.get('/status', getTaskStatus);
 router.get('/:id/history', getTaskHistory);
-router.get('/:id', getTaskById);
 
-router.post('/', createTask);
-
-router.patch('/:id', updateTask);
-
-router.delete('/delete/:id', deleteTask);
+router.route('/:id')
+  .get(getTaskById)
+  .patch(updateTask)
+  .delete(deleteTask);
 
 export default router;
